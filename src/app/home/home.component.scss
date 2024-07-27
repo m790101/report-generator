@@ -1,0 +1,22 @@
+:host {
+  display: block;
+}
+
+
+.form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.input-set{
+position: relative;
+
+
+}
+
+.error-msg{
+ position: absolute;
+ color:red;
+}

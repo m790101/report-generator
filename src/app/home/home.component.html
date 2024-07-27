@@ -1,0 +1,29 @@
+<main *ngIf="step() === 1">
+
+  <div>upload the doc (csv)</div>
+  <input
+    #fileUploadSimple
+    [accept]="'.csv'"
+    type="file"
+    class="file-input"
+    (change)="importDataFromCSV($event)"
+    hidden="true"
+  />
+  <button (click)="fileUploadSimple.click()">Import from csv</button>
+
+</main>
+<main *ngIf="step() === 1">
+  <span for="name">請輸入欲查詢姓名</span>
+  <form [formGroup]="searchForm" class="form">
+    <div class="input-set">
+        <input formControlName="name" />
+      <div
+        *ngIf="searchForm.get('name')?.invalid && searchForm.get('name')?.touched && searchForm.get('name')?.hasError('required')"
+      >
+        <span class="error-msg">請輸入姓名</span>
+      </div>
+    </div>
+    <button mat-flat-button  color="primary" (click)="submit()">submit</button>
+  </form>
+  <app-table [data]="data"></app-table>
+</main>
