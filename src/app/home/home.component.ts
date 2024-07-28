@@ -69,7 +69,6 @@ export class HomeComponent implements OnInit {
       this.searchForm.markAllAsTouched();
     } else {
       const name = this.searchForm.value.name;
-      console.log(this.inputDate)
       const filterDate = this.inputDate.filter((person:any)=>{
         return person.name === name
       })
