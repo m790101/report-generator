@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   OnInit,
   signal,
@@ -19,6 +20,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { HttpClient } from '@angular/common/http';
 import { catchError, of } from 'rxjs';
 import { CsvService } from '../../services/cvs.service';
+import {MatRadioModule} from '@angular/material/radio';
+import {MatStepperModule} from '@angular/material/stepper';
 
 @Component({
   selector: 'app-home',
@@ -29,6 +32,8 @@ import { CsvService } from '../../services/cvs.service';
     ReactiveFormsModule,
     MatButtonModule,
     MatIconModule,
+    MatRadioModule,
+    MatStepperModule
   ],
 
   styleUrl: './home.component.scss',
@@ -37,30 +42,38 @@ import { CsvService } from '../../services/cvs.service';
 })
 export class HomeComponent implements OnInit {
   searchForm!: FormGroup;
-  formName = new FormControl('');
+  formNameControl  = new FormControl('',[Validators.required]);
   step = signal(1);
 
-  constructor(private fb: FormBuilder, private http: HttpClient,private _csvService: CsvService) {}
+  constructor(
+    private fb: FormBuilder,
+    private _csvService: CsvService,
+    private cd: ChangeDetectorRef
+  ) {}
   inputDate: any = [];
 
   data: any = signal([]);
+  nameSet = new Set()
+  availableNames = signal([]);
 
   initForm() {
     this.searchForm = this.fb.group({
-      name: ['', Validators.required],
+      name: this.formNameControl,
     });
   }
   ngOnInit() {
-    // this.data.set([this.fakeData])
     this.initForm();
-    // this.getData();
   }
-  submit() {
+  next() {
     if (this.searchForm.invalid) {
       this.searchForm.markAllAsTouched();
     } else {
       const name = this.searchForm.value.name;
-      this.data.set(this.filterData(this.inputDate, name));
+      console.log(this.inputDate)
+      const filterDate = this.inputDate.filter((person:any)=>{
+        return person.name === name
+      })
+      this.data.set(filterDate);
     }
   }
 
@@ -79,11 +92,30 @@ export class HomeComponent implements OnInit {
 
   public async importDataFromCSV(event: any) {
     let fileContent = await this.getTextFromFile(event);
-    // this.step.set(2)
+    this.step.set(2)
     const importedData = this._csvService.importDataFromCSV(fileContent);
+    this.getNames(importedData)
     this.inputDate = importedData
+  }
 
-}
+  public getNames(data: any) {
+    data.forEach((person: any) => {
+      this.nameSet.add(person.name);
+    });
+    const res:any = []
+    this.nameSet.forEach((name)=>{
+      res.push(name)
+    })
+    this.nameSet.clear()
+    this.availableNames.set(res)
+  }
 
-
+  toChooseName(){
+    this.step.set(2)
+  }
+  toUpload(){
+    this.step.set(1)
+    this.data.set([])
+    this.searchForm.reset()
+  }
 }

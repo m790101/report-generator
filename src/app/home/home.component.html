@@ -1,29 +1,51 @@
-<main *ngIf="step() === 1">
-
-  <div>upload the doc (csv)</div>
-  <input
-    #fileUploadSimple
-    [accept]="'.csv'"
-    type="file"
-    class="file-input"
-    (change)="importDataFromCSV($event)"
-    hidden="true"
-  />
-  <button (click)="fileUploadSimple.click()">Import from csv</button>
-
-</main>
-<main *ngIf="step() === 1">
-  <span for="name">請輸入欲查詢姓名</span>
-  <form [formGroup]="searchForm" class="form">
-    <div class="input-set">
-        <input formControlName="name" />
-      <div
-        *ngIf="searchForm.get('name')?.invalid && searchForm.get('name')?.touched && searchForm.get('name')?.hasError('required')"
-      >
-        <span class="error-msg">請輸入姓名</span>
+<main class="mt-36">
+  <section *ngIf="step() === 1" class="justify-center flex">
+    <!-- <div>upload the doc (csv)</div> -->
+    <input
+      #fileUploadSimple
+      [accept]="'.csv'"
+      type="file"
+      class="file-input"
+      (change)="importDataFromCSV($event)"
+      hidden="true"
+    />
+    <button class="btn btn-round w-60 h-32 text-xl" (click)="fileUploadSimple.click()">
+      上傳csv檔案
+    </button>
+  </section>
+  <section *ngIf="step() === 2" class="items-center flex-col flex text-xl">
+    <div>
+      <span for="name">可查詢姓名</span>
+      <div>
+        <form [formGroup]="searchForm" class="form">
+          <div class="radio-section">
+            <mat-radio-group [formControl]="formNameControl" class="">
+              @for (person of availableNames(); track $index) {
+              <mat-radio-button [value]="person" class="text-7xl">
+                {{ person }}</mat-radio-button
+              >
+              } @empty {
+              <li>There are no items.</li>
+              }
+            </mat-radio-group>
+            <div
+              *ngIf="
+                searchForm.get('name')?.invalid &&
+                searchForm.get('name')?.touched &&
+                searchForm.get('name')?.hasError('required')
+              "
+            >
+              <span class="error-msg ext-red-500 text-s">請選擇姓名</span>
+            </div>
+          </div>
+        </form>
       </div>
     </div>
-    <button mat-flat-button  color="primary" (click)="submit()">submit</button>
-  </form>
-  <app-table [data]="data"></app-table>
+    <div>
+      <button class="btn btn-blue" (click)="toUpload()">回上傳檔案</button>
+      <button class="btn btn-blue ml-5" (click)="next()">看報告</button>
+    </div>
+  </section>
+
+  <app-table *ngIf="step() === 2" [data]="data"></app-table>
 </main>

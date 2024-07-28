@@ -8,7 +8,7 @@ const keyMapping: any = {
   '血球容積比值/Hct': 'Hct',
   '嗜中性白血球/Neut%': 'Neut',
   '淋巴球/Lym%': 'Lym',
-  '單核球/Mono%': 'Mono%',
+  '單核球/Mono%': 'Mono',
   '嗜鹼性白血球/Baso%': 'Baso',
   '嗜酸性白血球/Eosin%': 'Eosin',
   '血小板計數/PLT': 'PLT',
@@ -70,6 +70,8 @@ const keyMapping: any = {
   '乳癌篩檢標記/CA-153': 'CA153',
   '胃癌抗原 72-4/CA72-4': 'CA724',
   '224項過敏原/224項過敏?': 'allergen',
+  '類風濕性關節炎因子/RA(定量)':'RA',
+  '梅毒血清反應/STS-RPR':'STSRPR'
 };
 
 const columnMap: any = {
@@ -77,6 +79,9 @@ const columnMap: any = {
   7: 'name',
   10: 'title',
   11: 'value',
+  13:'criteria',
+  14: 'unit',
+  15: 'resultNote'
 };
 
 export class CsvService {
@@ -94,7 +99,10 @@ export class CsvService {
         const titleChange = keyMapping[title];
         singleData = {
           ...singleData,
-          [titleChange]: item.value,
+          [titleChange]: {
+            value: item.value,
+            resultNote: item.resultNote
+          },
         };
         // singleData.item.title = item.value
         map.set(key, singleData);
@@ -104,7 +112,10 @@ export class CsvService {
         // add new key to map
         const newData = {
           name: item.name,
-          [titleChange]: item.value,
+          [titleChange]: {
+            value: item.value,
+            resultNote: item.resultNote
+          },
           date: rocToAd(item.date),
         };
         map.set(key, newData);
@@ -127,7 +138,7 @@ export class CsvService {
     let dataArray: any[] = [];
     dataRows.forEach((row) => {
       let values = row.split(',');
-      // console.log(values);
+
       let obj: any = new Object();
       for (let index = 5; index < values.length; index++) {
         let val: any = columnMap[index]
@@ -141,7 +152,8 @@ export class CsvService {
         dataArray.push(obj);
       }
     });
-    // console.log(dataArray);
+
+
     const sortedData = this.sortByName(dataArray)
     return sortedData;
   }
