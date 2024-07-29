@@ -1,5 +1,82 @@
 import { rocToAd } from '../utils/date';
 
+const defaultData: any = {
+  id:1,
+  name: '',
+  date: '',
+  SCC: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  WBC: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  RBC: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  HgB: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  Hct: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  Neut: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  Lym: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  Mono: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  Baso: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  Eosin: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  PLT: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  MCH: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  MCV: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  MCHC: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  UColor: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  UPRO: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  UGLU: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  UURO: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  UBIL: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  UKET: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  UPH: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  UNIT: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  USG: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  Other: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  ULEU: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  UOB: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  URBC: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  UWBC: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  UEP: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  UCRY: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  UCAS: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  UBAC: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  CHDL: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  ACGlu: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  HBA1c: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  TG: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  CHOL: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  HDLC: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  LDLC: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  T4: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  FreeT4: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  FreeT3: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  TSH: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  T3: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  Thyroglobulin: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  AntiTPO: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  ANA: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  TBili: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  DBili: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  SGOT: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  SGPT: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  rGT: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  ALKP: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  BUN: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  CreaB: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  UA: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  TP: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  ALB: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  GLO: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  AG: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  CEA: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  AFP: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  Cyfra: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  eGFR: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  CA125: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  CA199: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  CA153: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  CA72: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  allergen: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  RA: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  STSRPR: { title: '', value: '', units: '', resultNote: '', criteria: '' }
+};
+
 const keyMapping: any = {
   '子宮頸跟食道癌/SCC': 'SCC',
   '白血球計數/WBC': 'WBC',
@@ -80,9 +157,26 @@ const columnMap: any = {
   10: 'title',
   11: 'value',
   13:'criteria',
-  14: 'unit',
+  14: 'units',
   15: 'resultNote'
 };
+
+
+function makeNewDataItem(item:any,titleChange:any,id:number){
+  const newData = {
+    ...defaultData,
+    name: item.name,
+    id: id,
+    date: rocToAd(item.date),
+    [titleChange]: {
+      value: item.value,
+      resultNote: item.resultNote,
+      units: item.units,
+      criteria: item.criteria,
+    },
+  };
+  return newData
+}
 
 export class CsvService {
   public sortByName(data: any) {
@@ -90,34 +184,46 @@ export class CsvService {
 
     let res:any = [];
     const map = new Map();
-
+    let id = 1
     data.forEach((item: any) => {
       const key = item.name + item.date;
       if (map.has(key)) {
         let singleData = map.get(key);
+
         const title = item.title;
         const titleChange = keyMapping[title];
-        singleData = {
-          ...singleData,
-          [titleChange]: {
+
+        if(singleData[titleChange].value.length > 0){
+          // add new one
+          if (map.has(key + '2')){
+            let secondData = map.get(key+'2');
+            secondData[titleChange] = {
+              value: item.value,
+              resultNote: item.resultNote,
+              units: item.units,
+              criteria: item.criteria,
+              title: item.title
+            }
+          } else {
+            const newData = makeNewDataItem(item,titleChange,id+1)
+            const updateKey = item.name + item.date + '2'
+            map.set(updateKey, newData);
+          }
+        }
+        else{
+          singleData[titleChange] = {
             value: item.value,
-            resultNote: item.resultNote
-          },
-        };
-        // singleData.item.title = item.value
-        map.set(key, singleData);
+            resultNote: item.resultNote,
+            units: item.units,
+            criteria: item.criteria,
+            title: item.title
+          }
+
+        }
       } else {
         const title = item.title;
         const titleChange = keyMapping[title];
-        // add new key to map
-        const newData = {
-          name: item.name,
-          [titleChange]: {
-            value: item.value,
-            resultNote: item.resultNote
-          },
-          date: rocToAd(item.date),
-        };
+        const newData = makeNewDataItem(item,titleChange,id)
         map.set(key, newData);
       }
     });
@@ -155,6 +261,11 @@ export class CsvService {
 
 
     const sortedData = this.sortByName(dataArray)
+    console.log(sortedData)
     return sortedData;
   }
 }
+
+
+
+

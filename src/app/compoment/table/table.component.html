@@ -17,9 +17,11 @@
     <ng-container *ngFor="let key of getKeys()">
       <tr *ngIf="hasValue(key)">
         <td>{{ titleMapping[key]??'' }}</td>
-        <td *ngFor="let item of data()" [style.color]="checkResult(item[key]?.resultNote)">
-          {{ item[key]?.value }}
-        </td>
+        <ng-container *ngFor="let item of data()">
+          <td  [style.color]="checkResult(item[key]?.resultNote)">
+            {{ item[key]?.value }}
+          </td>
+        </ng-container>
         <td>{{ criteria[key] }}</td>
         <td>{{ units[key] }}</td>
       </tr>
@@ -28,3 +30,31 @@
 </table>
 
 }
+
+
+<!--
+<div class="flex">
+  <div>
+    <ul>
+    @for (key of getKeys(); track $index) {
+      <li>
+        {{ titleMapping[key]??'' }}
+      </li>
+    }
+  </ul>
+  </div>
+  @for (item of data(); track $index){
+
+  }
+  <div>
+    <ul>
+    @for (key of getKeys(); track $index) {
+      <li>
+         {{ data()[0][key]?.value?? '' }}
+        {{key}}
+      </li>
+    }
+  </ul>
+  </div>
+</div>
+-->

@@ -182,6 +182,7 @@ export class TableComponent {
   }
 
   getKeys() {
+    // console.log(Object.keys(this.titleMapping))
     return Object.keys(this.titleMapping)as (keyof DataItem)[];
   }
 
@@ -335,75 +336,3 @@ interface DataItem {
   STSRPR?: string;
 }
 
-// interface DataItem {
-//   SCC?: ExamItemResult;
-//   WBC?: ExamItemResult;
-//   RBC?: ExamItemResult;
-//   HgB?: ExamItemResult;
-//   Hct?: ExamItemResult;
-//   Neut?: ExamItemResult;
-//   Lym?: ExamItemResult;
-//   Mono?: ExamItemResult;
-//   Baso?: ExamItemResult;
-//   Eosin?: ExamItemResult;
-//   PLT?: ExamItemResult;
-//   MCH?: ExamItemResult;
-//   MCV?: ExamItemResult;
-//   MCHC?: ExamItemResult;
-//   UColor?: ExamItemResult;
-//   UPRO?: ExamItemResult;
-//   UGLU?: ExamItemResult;
-//   UURO?: ExamItemResult;
-//   UBIL?: ExamItemResult;
-//   UKET?: ExamItemResult;
-//   UPH?: ExamItemResult;
-//   UNIT?: ExamItemResult;
-//   USG?: ExamItemResult;
-//   Other?: ExamItemResult;
-//   ULEU?: ExamItemResult;
-//   UOB?: ExamItemResult;
-//   URBC?: ExamItemResult;
-//   UWBC?: ExamItemResult;
-//   UEP?: ExamItemResult;
-//   UCRY?: ExamItemResult;
-//   UCAS?: ExamItemResult;
-//   UBAC?: ExamItemResult;
-//   CHDL?: ExamItemResult;
-//   ACGlu?: ExamItemResult;
-//   HBA1c?: ExamItemResult;
-//   TG?: ExamItemResult;
-//   CHOL?: ExamItemResult;
-//   HDLC?: ExamItemResult;
-//   LDLC?: ExamItemResult;
-//   T4?: ExamItemResult;
-//   FreeT4?: ExamItemResult;
-//   FreeT3?: ExamItemResult;
-//   TSH?: ExamItemResult;
-//   T3?: ExamItemResult;
-//   Thyroglobulin?: ExamItemResult;
-//   AntiTPO?: ExamItemResult;
-//   ANA?: ExamItemResult;
-//   TBili?: ExamItemResult;
-//   DBili?: ExamItemResult;
-//   SGOT?: ExamItemResult;
-//   SGPT?: ExamItemResult;
-//   rGT?: ExamItemResult;
-//   ALKP?: ExamItemResult;
-//   BUN?: ExamItemResult;
-//   CreaB?: ExamItemResult;
-//   UA?: ExamItemResult;
-//   TP?: ExamItemResult;
-//   ALB?: ExamItemResult;
-//   GLO?: ExamItemResult;
-//   AG?: ExamItemResult;
-//   CEA?: ExamItemResult;
-//   AFP?: ExamItemResult;
-//   Cyfra?: ExamItemResult;
-//   eGFR?: ExamItemResult;
-//   CA125?: ExamItemResult;
-//   CA199?: ExamItemResult;
-//   CA153?: ExamItemResult;
-//   CA72?: ExamItemResult;
-//   RA?: ExamItemResult;
-//   STSRPR?:ExamItemResult
-// }
