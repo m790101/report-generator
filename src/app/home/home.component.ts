@@ -22,6 +22,7 @@ import { catchError, of } from 'rxjs';
 import { CsvService } from '../../services/cvs.service';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatStepperModule} from '@angular/material/stepper';
+import { StepperComponent } from '../compoment/stepper/stepper.component';
 
 @Component({
   selector: 'app-home',
@@ -33,7 +34,8 @@ import {MatStepperModule} from '@angular/material/stepper';
     MatButtonModule,
     MatIconModule,
     MatRadioModule,
-    MatStepperModule
+    MatStepperModule,
+    StepperComponent
   ],
 
   styleUrl: './home.component.scss',

@@ -1,6 +1,10 @@
-<main class="mt-36">
+<main class="mt-36  flex flex-col items-center">
+    <div class="text-5xl mb-16">
+      <p>----- 溫蒂生比較報告給你 -----</p>
+    </div>
+    <app-stepper [step]="step"></app-stepper>
+
   <section *ngIf="step() === 1" class="justify-center flex">
-    <!-- <div>upload the doc (csv)</div> -->
     <input
       #fileUploadSimple
       [accept]="'.csv'"
@@ -9,43 +13,61 @@
       (change)="importDataFromCSV($event)"
       hidden="true"
     />
-    <button class="btn btn-round w-60 h-32 text-xl" (click)="fileUploadSimple.click()">
+    <button
+      class="btn btn-round w-60 h-32 text-xl"
+      (click)="fileUploadSimple.click()"
+    >
       上傳csv檔案
     </button>
   </section>
-  <section *ngIf="step() === 2" class="items-center flex-col flex text-xl">
-    <div>
-      <span for="name">可查詢姓名</span>
-      <div>
-        <form [formGroup]="searchForm" class="form">
-          <div class="radio-section">
-            <mat-radio-group [formControl]="formNameControl" class="">
-              @for (person of availableNames(); track $index) {
-              <mat-radio-button [value]="person" class="text-7xl">
-                {{ person }}</mat-radio-button
+  <section
+    *ngIf="step() === 2"
+    class="items-center flex-col flex text-xl w-full"
+  >
+    <div
+      class="max-w-l p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 w-1/2"
+    >
+
+        <div>
+          <form [formGroup]="searchForm" class="form">
+            <div class="flex">
+              <span for="name">請選擇欲查詢姓名:</span>
+              <div
+                *ngIf="
+                  searchForm.get('name')?.invalid &&
+                  searchForm.get('name')?.touched &&
+                  searchForm.get('name')?.hasError('required')
+                "
+                class="ml-3"
               >
-              } @empty {
-              <li>There are no items.</li>
-              }
-            </mat-radio-group>
-            <div
-              *ngIf="
-                searchForm.get('name')?.invalid &&
-                searchForm.get('name')?.touched &&
-                searchForm.get('name')?.hasError('required')
-              "
-            >
-              <span class="error-msg ext-red-500 text-s">請選擇姓名</span>
+                <span class="error-msg ext-red-500 text-s">請選擇姓名</span>
+              </div>
             </div>
+            <div class="radio-section">
+              <mat-radio-group [formControl]="formNameControl" class="">
+                @for (person of availableNames(); track $index) {
+                <mat-radio-button [value]="person" class="text-7xl">
+                  {{ person }}</mat-radio-button
+                >
+                } @empty {
+                <li>There are no items.</li>
+                }
+              </mat-radio-group>
+
+            </div>
+          </form>
+          <div class="flex justify-center">
+            <button class="btn btn-blue" (click)="toUpload()">回上傳檔案</button>
+            <button class="btn btn-blue ml-5" (click)="next()">看報告</button>
           </div>
-        </form>
-      </div>
-    </div>
-    <div>
-      <button class="btn btn-blue" (click)="toUpload()">回上傳檔案</button>
-      <button class="btn btn-blue ml-5" (click)="next()">看報告</button>
+        </div>
     </div>
   </section>
-
-  <app-table *ngIf="step() === 2" [data]="data" class="mt-36"></app-table>
+  <section class="mt-36 flex justify-center">
+    <app-table *ngIf="step() === 2" [data]="data"></app-table>
+  </section>
+  <footer class="text-l" *ngIf="step() === 1">
+    by HAOWEN
+  </footer>
 </main>
+

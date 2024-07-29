@@ -1,0 +1,28 @@
+<ol
+  class="items-center w-full space-y-4 sm:flex sm:space-x-8 sm:space-y-0 rtl:space-x-reverse mb-16 text-2xl"
+>
+  <li
+    class="flex items-center dark:text-blue-500 space-x-2.5 rtl:space-x-reverse"
+    [ngClass]="getTextColor(1)"
+  >
+    <span
+      class="flex items-center justify-center w-10 h-10 border  rounded-full shrink-0 dark:border-blue-500"
+      [ngClass]="getBorderColor(1)"
+    >
+      1
+    </span>
+    <span class="font-medium leading-tight">上傳檔案</span>
+  </li>
+  <li
+    class="flex items-center  dark:text-gray-400 space-x-2.5 rtl:space-x-reverse"
+    [ngClass]="getTextColor(2)"
+  >
+    <span
+      class="flex items-center justify-center w-10 h-10 border  rounded-full shrink-0 dark:border-gray-400"
+      [ngClass]="getBorderColor(2)"
+    >
+      2
+    </span>
+    <span class="font-medium leading-tight">選擇姓名並觀看報告</span>
+  </li>
+</ol>
