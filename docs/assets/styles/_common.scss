@@ -43,6 +43,10 @@ a:hover {
   @apply text-xl
 }
 
+tr {
+  @apply border-b border-gray-200
+}
+
 
 
 @media (prefers-color-scheme: light) {
