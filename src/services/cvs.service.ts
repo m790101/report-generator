@@ -74,7 +74,16 @@ const defaultData: any = {
   CA72: { title: '', value: '', units: '', resultNote: '', criteria: '' },
   allergen: { title: '', value: '', units: '', resultNote: '', criteria: '' },
   RA: { title: '', value: '', units: '', resultNote: '', criteria: '' },
-  STSRPR: { title: '', value: '', units: '', resultNote: '', criteria: '' }
+  STSRPR: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  PSA: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  CRP: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  TroponinI: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  EBVCAIgA: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  HCG: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  SCCO: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  HCVAb: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  HAVIgG: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  UA2: { title: '', value: '', units: '', resultNote: '', criteria: '' },
 };
 
 const keyMapping: any = {
@@ -148,7 +157,16 @@ const keyMapping: any = {
   '胃癌抗原 72-4/CA72-4': 'CA724',
   '224項過敏原/224項過敏?': 'allergen',
   '類風濕性關節炎因子/RA(定量)':'RA',
-  '梅毒血清反應/STS-RPR':'STSRPR'
+  '梅毒血清反應/STS-RPR':'STSRPR',
+  '攝護腺特異抗原/PSA':'PSA',
+  'Ｃ反應蛋白/CRP-定量':'CRP',
+  '心肌旋轉蛋白/Troponin-I':'TroponinI',
+  'EB病毒囊鞘IgA/EBVCA-IgA':'EBVCAIgA',
+  '睪丸癌/β-HCG':'HCG',
+  '口腔及食道癌/SCC':'SCCO',
+  'Ｃ型肝炎抗體/HCV-Ab':'HCVAb',
+  'Ａ型肝炎IgG 抗體/HAV-IgG':'HAVIgG',
+  '尿 酸/UA'  :'UA2',
 };
 
 const columnMap: any = {
@@ -180,8 +198,6 @@ function makeNewDataItem(item:any,titleChange:any,id:number){
 
 export class CsvService {
   public sortByName(data: any) {
-
-
     let res:any = [];
     const map = new Map();
     let id = 1
@@ -193,7 +209,7 @@ export class CsvService {
         const title = item.title;
         const titleChange = keyMapping[title];
 
-        if(singleData[titleChange].value.length > 0){
+        if(singleData[titleChange]?.value.length > 0){
           // add new one
           if (map.has(key + '2')){
             let secondData = map.get(key+'2');
@@ -222,6 +238,7 @@ export class CsvService {
         }
       } else {
         const title = item.title;
+
         const titleChange = keyMapping[title];
         const newData = makeNewDataItem(item,titleChange,id)
         map.set(key, newData);
@@ -261,7 +278,7 @@ export class CsvService {
 
 
     const sortedData = this.sortByName(dataArray)
-    console.log(sortedData)
+    // console.log(sortedData)
     return sortedData;
   }
 }
