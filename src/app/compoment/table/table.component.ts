@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, Signal, output } from '@angular/core';
+import moment from 'moment';
 
 
 @Component({
@@ -18,7 +19,7 @@ export class TableComponent {
 
   @Output()
   backEvent = new EventEmitter();
-
+  positiveResult = ['N','L']
 
   criteria = {
     SCC: "<2.7",
@@ -175,15 +176,19 @@ export class TableComponent {
   }
 
   checkResult(result:string):string{
-      if(result !== 'N'){
-        return 'red'
+      if(this.positiveResult.includes(result)){
+        return ''
       }
-      return ''
+      return 'red'
   }
 
   getKeys() {
     // console.log(Object.keys(this.titleMapping))
     return Object.keys(this.titleMapping)as (keyof DataItem)[];
+  }
+
+  getFormatDate(date:string){
+      return moment(date,"YYYYMMDD").format("YYYY/MM/DD")
   }
 
   titleMapping: any = {

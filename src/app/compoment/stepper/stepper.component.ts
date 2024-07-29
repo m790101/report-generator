@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input, Signal, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit, Signal, signal } from '@angular/core';
 
 @Component({
   selector: 'app-stepper',
@@ -11,7 +11,8 @@ import { ChangeDetectionStrategy, Component, Input, Signal, signal } from '@angu
   styleUrl: './stepper.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class StepperComponent {
+export class StepperComponent implements OnInit {
+
   @Input() step = signal(1);
   blue = 'text-blue-600'
   gray = 'text-gray-500'
@@ -22,16 +23,21 @@ export class StepperComponent {
   getTextColor(step:number){
     if(this.step() === step){
       return this.blue
-    }else {
+    } else {
       return this.gray
     }
+
   }
 
   getBorderColor(step:number){
     if(this.step() === step){
       return this.borderBlue
-    }else {
+    } else {
       return this.borderGray
     }
+  }
+
+  ngOnInit(): void {
+    console.log(this.step())
   }
 }

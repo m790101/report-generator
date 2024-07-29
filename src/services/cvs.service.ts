@@ -1,5 +1,6 @@
 import { rocToAd } from '../utils/date';
 
+
 const defaultData: any = {
   id:1,
   name: '',
@@ -71,7 +72,7 @@ const defaultData: any = {
   CA125: { title: '', value: '', units: '', resultNote: '', criteria: '' },
   CA199: { title: '', value: '', units: '', resultNote: '', criteria: '' },
   CA153: { title: '', value: '', units: '', resultNote: '', criteria: '' },
-  CA72: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  CA724: { title: '', value: '', units: '', resultNote: '', criteria: '' },
   allergen: { title: '', value: '', units: '', resultNote: '', criteria: '' },
   RA: { title: '', value: '', units: '', resultNote: '', criteria: '' },
   STSRPR: { title: '', value: '', units: '', resultNote: '', criteria: '' },
@@ -84,6 +85,25 @@ const defaultData: any = {
   HCVAb: { title: '', value: '', units: '', resultNote: '', criteria: '' },
   HAVIgG: { title: '', value: '', units: '', resultNote: '', criteria: '' },
   UA2: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  PT: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  APTT: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  INR: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  HBsAg: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  HBsAb: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  HIV: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  Cortisol: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  DHEAS: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  Testostero: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  Fibrinogen: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  AMH: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  PCGlu: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  C13UreaBefore: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  C13UreaAfter: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  hsCRP: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  Ferritin: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  C13UreaDOB: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  breath: { title: '', value: '', units: '', resultNote: '', criteria: '' },
+  C13Breath: { title: '', value: '', units: '', resultNote: '', criteria: '' },
 };
 
 const keyMapping: any = {
@@ -167,7 +187,27 @@ const keyMapping: any = {
   'Ｃ型肝炎抗體/HCV-Ab':'HCVAb',
   'Ａ型肝炎IgG 抗體/HAV-IgG':'HAVIgG',
   '尿 酸/UA'  :'UA2',
+  '凝血脢原時間/PT':'PT',
+  '部份凝血活脢時間/APTT':'APTT',
+  'INR/INR':'INR',
+  'Ｂ型肝炎表面抗原/HBsAg':'HBsAg',
+  'Ｂ型肝炎表面抗體/HBsAb':'HBsAb',
+  '愛滋病感染篩檢/HIV':'HIV',
+  '可體松/Cortisol':'Cortisol',
+  '硫化脫氫異雄固醇/DHEA-S':'DHEAS',
+  '睪丸酮素/Testostero':'Testostero',
+  '纖維蛋白原測定/Fibrinogen':'Fibrinogen',
+  '卵巢功能/AMH':'AMH',
+  '飯後血糖/PC-Glu':'PCGlu',
+  'C13-Urea服藥前/C13-Urea服藥前':'C13UreaBefore',
+  'C13-Urea服藥後/C13-Urea服藥後':'C13UreaAfter',
+  '高敏性C反應蛋白/hs-CRP':'hsCRP',
+  '鐵蛋白/Ferritin':'Ferritin',
+  'C13-Urea DOB值/C13-Urea DOB值':'C13UreaDOB',
+  '呼氣檢查結果/呼氣檢查結果':'breath',
+  'C13幽門桿菌呼氣試驗/C-13幽門桿':'C13Breath'
 };
+
 
 const columnMap: any = {
   5: 'date',
@@ -208,6 +248,9 @@ export class CsvService {
 
         const title = item.title;
         const titleChange = keyMapping[title];
+        if(!singleData[titleChange]){
+          console.log(title)
+        }
 
         if(singleData[titleChange]?.value.length > 0){
           // add new one

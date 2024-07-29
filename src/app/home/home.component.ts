@@ -11,18 +11,16 @@ import {
   FormBuilder,
   FormControl,
   FormGroup,
-  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { HttpClient } from '@angular/common/http';
-import { catchError, of } from 'rxjs';
 import { CsvService } from '../../services/cvs.service';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatStepperModule} from '@angular/material/stepper';
 import { StepperComponent } from '../compoment/stepper/stepper.component';
+import moment from 'moment';
 
 @Component({
   selector: 'app-home',
@@ -74,7 +72,8 @@ export class HomeComponent implements OnInit {
       const filterDate = this.inputDate.filter((person:any)=>{
         return person.name === name
       })
-      this.data.set(filterDate);
+      const resData = this.sortByDate(filterDate)
+      this.data.set(resData);
     }
   }
 
@@ -119,4 +118,12 @@ export class HomeComponent implements OnInit {
     this.data.set([])
     this.searchForm.reset()
   }
+
+  sortByDate(dataArray:any) {
+    return dataArray.sort((a:any, b:any) => {
+        const dateA = moment(a.date, "YYYYMMDD");
+        const dateB = moment(b.date, "YYYYMMDD");
+        return dateA.diff(dateB);
+    });
+}
 }
