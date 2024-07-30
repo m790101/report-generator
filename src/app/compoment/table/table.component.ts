@@ -1,14 +1,26 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, Signal, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  Signal,
+  output,
+} from '@angular/core';
 import moment from 'moment';
+import jsPDF from 'jspdf';
+import { IconDownloadComponent } from '../icon-download/icon-download.component';
+import autoTable from 'jspdf-autotable'
+import '../../../assets/font/NotoSansTC-Regular-normal'
+import html2canvas from 'html2canvas';
+import { borderBottomWidth } from 'html2canvas/dist/types/css/property-descriptors/border-width';
 
 
 @Component({
   selector: 'app-table',
   standalone: true,
-  imports: [
-    CommonModule,
-  ],
+  imports: [CommonModule,IconDownloadComponent],
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,176 +31,208 @@ export class TableComponent {
 
   @Output()
   backEvent = new EventEmitter();
-  positiveResult = ['N','L']
+  positiveResult = ['N', 'L'];
 
   criteria = {
-    SCC: "<2.7",
-    WBC: "4-10",
-    RBC: "男:4.2-6.2;女:3.7-5.5",
-    HgB: "男:12.3-18.3;女:11.3-15.3",
-    Hct: "男:39.0-53.0;女:33.0-47.0",
-    Neut: "40-75",
-    Lym: "20-45",
-    Mono: "2-10",
-    Baso: "0-1",
-    Eosin: "0-6",
-    PLT: "140-400",
-    MCH: "25-34",
-    MCV: "80-100",
-    MCHC: "30-36",
-    UColor: "Yellow",
-    UPRO: "(-)",
-    UGLU: "(-)",
-    UURO: "Normal",
-    UBIL: "(-)",
-    UKET: "(-)",
-    UPH: "5.0-8.0",
-    UNIT: "(-)",
-    USG: "1.005-1.030",
-    Other: "NOT FOUND",
-    ULEU: "(-)",
-    UOB: "(-)",
-    URBC: "0-5",
-    UWBC: "0-5",
-    UEP: "M:1-4，F:1-8",
-    UCRY: "NOT FOUND",
-    UCAS: "NOT FOUND",
-    UBAC: "NOT FOUND",
-    CHDL: "<5.0",
-    ACGlu: "70-100",
-    HBA1c: "4.0-6.0",
-    TG: "30-150",
-    CHOL: "<200(糖尿病<160)",
-    HDLC: "40-200",
-    LDLC: "<130(糖尿病<100；心血管疾病<70)",
-    T4: "4.87-11.72",
-    FreeT4: "0.7-1.48",
-    FreeT3: "2.50-3.90",
-    TSH: "0.35-4.94",
-    T3: "0.35-1.93",
-    Thyroglobulin: "3.5-77",
-    AntiTPO: "<34",
-    ANA: "(-)1:80X; >160X(+)具臨床意義",
-    TBili: "0.10-1.40",
-    DBili: "<0.50",
-    SGOT: "5-37",
-    SGPT: "<42",
-    rGT: "10-47",
-    ALKP: "男:40-130;女:35-105",
-    BUN: "5-23",
-    CreaB: "0.1-1.4",
-    UA: "男:3.5-7.2;女:2.6-6.0",
-    TP: "6.3-8.7",
-    ALB: "3.5-5.5",
-    GLO: "2.4-3.6",
-    AG: "1.1-2.5",
-    CEA: "0-5.00",
-    AFP: "0.89-8.78",
-    Cyfra: "<3.3",
-    eGFR: "≧60",
-    CA125: "0-35.0",
-    CA199: "0-35.0",
-    CA153: "0-23.5",
-    CA72: "0-6.9",
-    RA:"<14.0",
-    STSRPR:"(-):Non-Reactive",
-    allergen:''
-  }
+    SCC: '<2.7',
+    WBC: '4-10',
+    RBC: '男:4.2-6.2;女:3.7-5.5',
+    HgB: '男:12.3-18.3;女:11.3-15.3',
+    Hct: '男:39.0-53.0;女:33.0-47.0',
+    Neut: '40-75',
+    Lym: '20-45',
+    Mono: '2-10',
+    Baso: '0-1',
+    Eosin: '0-6',
+    PLT: '140-400',
+    MCH: '25-34',
+    MCV: '80-100',
+    MCHC: '30-36',
+    UColor: 'Yellow',
+    UPRO: '(-)',
+    UGLU: '(-)',
+    UURO: 'Normal',
+    UBIL: '(-)',
+    UKET: '(-)',
+    UPH: '5.0-8.0',
+    UNIT: '(-)',
+    USG: '1.005-1.030',
+    Other: 'NOT FOUND',
+    ULEU: '(-)',
+    UOB: '(-)',
+    URBC: '0-5',
+    UWBC: '0-5',
+    UEP: 'M:1-4，F:1-8',
+    UCRY: 'NOT FOUND',
+    UCAS: 'NOT FOUND',
+    UBAC: 'NOT FOUND',
+    CHDL: '<5.0',
+    ACGlu: '70-100',
+    HBA1c: '4.0-6.0',
+    TG: '30-150',
+    CHOL: '<200(糖尿病<160)',
+    HDLC: '40-200',
+    LDLC: '<130(糖尿病<100；心血管疾病<70)',
+    T4: '4.87-11.72',
+    FreeT4: '0.7-1.48',
+    FreeT3: '2.50-3.90',
+    TSH: '0.35-4.94',
+    T3: '0.35-1.93',
+    Thyroglobulin: '3.5-77',
+    AntiTPO: '<34',
+    ANA: '(-)1:80X; >160X(+)具臨床意義',
+    TBili: '0.10-1.40',
+    DBili: '<0.50',
+    SGOT: '5-37',
+    SGPT: '<42',
+    rGT: '10-47',
+    ALKP: '男:40-130;女:35-105',
+    BUN: '5-23',
+    CreaB: '0.1-1.4',
+    UA: '男:3.5-7.2;女:2.6-6.0',
+    TP: '6.3-8.7',
+    ALB: '3.5-5.5',
+    GLO: '2.4-3.6',
+    AG: '1.1-2.5',
+    CEA: '0-5.00',
+    AFP: '0.89-8.78',
+    Cyfra: '<3.3',
+    eGFR: '≧60',
+    CA125: '0-35.0',
+    CA199: '0-35.0',
+    CA153: '0-23.5',
+    CA72: '0-6.9',
+    RA: '<14.0',
+    STSRPR: '(-):Non-Reactive',
+    allergen: '',
+  };
   units = {
-    SCC: "ng/mL",
-    WBC: "10^3/uL",
-    RBC: "10^6/uL",
-    HgB: "g/dL",
-    Hct: "%",
-    Neut: "%",
-    Lym: "%",
-    Mono: "%",
-    Baso: "%",
-    Eosin: "%",
-    PLT: "10^3/uL",
-    MCH: "pg",
-    MCV: "fL",
-    MCHC: "g/dL",
-    UColor: "",
-    UPRO: "",
-    UGLU: "",
-    UURO: "",
-    UBIL: "",
-    UKET: "",
-    UPH: "",
-    UNIT: "",
-    USG: "",
-    Other: "",
-    ULEU: "",
-    UOB: "",
-    URBC: "",
-    UWBC: "",
-    UEP: "",
-    UCRY: "",
-    UCAS: "",
-    UBAC: "",
-    CHDL: "mmol/L",
-    ACGlu: "mg/dL",
-    HBA1c: "%",
-    TG: "mg/dL",
-    CHOL: "mg/dL",
-    HDLC: "mg/dL",
-    LDLC: "mg/dL",
-    T4: "μg/dL",
-    FreeT4: "ng/dL",
-    FreeT3: "pg/mL",
-    TSH: "μIU/mL",
-    T3: "ng/mL",
-    Thyroglobulin: "ng/mL",
-    AntiTPO: "IU/mL",
-    ANA: "",
-    TBili: "mg/dL",
-    DBili: "mg/dL",
-    SGOT: "U/L",
-    SGPT: "U/L",
-    rGT: "U/L",
-    ALKP: "U/L",
-    BUN: "mg/dL",
-    CreaB: "mg/dL",
-    UA: "mg/dL",
-    TP: "g/dL",
-    ALB: "g/dL",
-    GLO: "g/dL",
-    AG: "",
-    CEA: "ng/mL",
-    AFP: "ng/mL",
-    Cyfra: "ng/mL",
-    eGFR: "mL/min/1.73m^2",
-    CA125: "U/mL",
-    CA199: "U/mL",
-    CA153: "U/mL",
-    CA72: "U/mL",
-    RA:'IU/ mL',
+    SCC: 'ng/mL',
+    WBC: '10^3/uL',
+    RBC: '10^6/uL',
+    HgB: 'g/dL',
+    Hct: '%',
+    Neut: '%',
+    Lym: '%',
+    Mono: '%',
+    Baso: '%',
+    Eosin: '%',
+    PLT: '10^3/uL',
+    MCH: 'pg',
+    MCV: 'fL',
+    MCHC: 'g/dL',
+    UColor: '',
+    UPRO: '',
+    UGLU: '',
+    UURO: '',
+    UBIL: '',
+    UKET: '',
+    UPH: '',
+    UNIT: '',
+    USG: '',
+    Other: '',
+    ULEU: '',
+    UOB: '',
+    URBC: '',
+    UWBC: '',
+    UEP: '',
+    UCRY: '',
+    UCAS: '',
+    UBAC: '',
+    CHDL: 'mmol/L',
+    ACGlu: 'mg/dL',
+    HBA1c: '%',
+    TG: 'mg/dL',
+    CHOL: 'mg/dL',
+    HDLC: 'mg/dL',
+    LDLC: 'mg/dL',
+    T4: 'μg/dL',
+    FreeT4: 'ng/dL',
+    FreeT3: 'pg/mL',
+    TSH: 'μIU/mL',
+    T3: 'ng/mL',
+    Thyroglobulin: 'ng/mL',
+    AntiTPO: 'IU/mL',
+    ANA: '',
+    TBili: 'mg/dL',
+    DBili: 'mg/dL',
+    SGOT: 'U/L',
+    SGPT: 'U/L',
+    rGT: 'U/L',
+    ALKP: 'U/L',
+    BUN: 'mg/dL',
+    CreaB: 'mg/dL',
+    UA: 'mg/dL',
+    TP: 'g/dL',
+    ALB: 'g/dL',
+    GLO: 'g/dL',
+    AG: '',
+    CEA: 'ng/mL',
+    AFP: 'ng/mL',
+    Cyfra: 'ng/mL',
+    eGFR: 'mL/min/1.73m^2',
+    CA125: 'U/mL',
+    CA199: 'U/mL',
+    CA153: 'U/mL',
+    CA72: 'U/mL',
+    RA: 'IU/ mL',
     STSRPR: '',
-    allergen:''
+    allergen: '',
+  };
+
+  generatePdf(data: any) {
+
+    var doc = new jsPDF();
+    const header = this.data()[0].name + ':'
+    doc.setFont("NotoSansTC-Regular");
+    doc.setFontSize(12)
+    doc.text(header, 15, 10)
+
+    doc.setTextColor('#58636d')
+    autoTable(doc,{html:'#pdfTable',
+      useCss:true,
+      styles: {
+      font: 'NotoSansTC-Regular',
+      fontStyle: 'normal',
+      lineWidth: {
+        bottom: 1,
+        top: 0,
+        left: 0,
+        right: 0,
+      },
+    },
+
+  })
+    doc.save('table.pdf');
   }
+
 
   hasValue(key: any): boolean {
-    return this.data().some((item:any) => item[key]?.value !== null && item[key]?.value !== undefined && item[key]?.value !== '');
+    return this.data().some(
+      (item: any) =>
+        item[key]?.value !== null &&
+        item[key]?.value !== undefined &&
+        item[key]?.value !== ''
+    );
   }
-  back(){
-    this.backEvent.emit()
+  back() {
+    this.backEvent.emit();
   }
 
-  checkResult(result:string):string{
-      if(this.positiveResult.includes(result)){
-        return ''
-      }
-      return 'red'
+  checkResult(result: string): string {
+    if (this.positiveResult.includes(result)) {
+      return '';
+    }
+    return 'red';
   }
 
   getKeys() {
     // console.log(Object.keys(this.titleMapping))
-    return Object.keys(this.titleMapping)as (keyof DataItem)[];
+    return Object.keys(this.titleMapping) as (keyof DataItem)[];
   }
 
-  getFormatDate(date:string){
-      return moment(date,"YYYYMMDD").format("YYYY/MM/DD")
+  getFormatDate(date: string) {
+    return moment(date, 'YYYYMMDD').format('YYYY/MM/DD');
   }
 
   titleMapping: any = {
@@ -262,9 +306,8 @@ export class TableComponent {
     CA72: '胃癌抗原 72-4/CA72-4',
     allergen: '224項過敏原/224項過敏?',
     RA: '類風濕性關節炎因子/RA(定量)',
-    STSRPR: '梅毒血清反應/STS-RPR'
+    STSRPR: '梅毒血清反應/STS-RPR',
   };
-
 }
 
 interface DataItem {
@@ -341,3 +384,9 @@ interface DataItem {
   STSRPR?: string;
 }
 
+
+// var callAddFont = function () {
+//   this.addFileToVFS('NotoSansTC-Regular-normal.ttf', font);
+//   this.addFont('NotoSansTC-Regular-normal.ttf', 'NotoSansTC-Regular', 'normal');
+//   };
+//   jsPDF.API.events.push(['addFonts', callAddFont])
