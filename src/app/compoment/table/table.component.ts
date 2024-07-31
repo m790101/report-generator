@@ -11,16 +11,26 @@ import {
 import moment from 'moment';
 import jsPDF from 'jspdf';
 import { IconDownloadComponent } from '../icon-download/icon-download.component';
+import {
+  bloodRoutineExamination,
+  whiteBloodCellDifferentiation,
+  bloodSugarExamination,
+  liverFunctionExamination,
+  bloodLipidExamination,
+  generalUrineExamination,
+  urineSedimentExamination,
+  liverDiseaseExamination,
+  sexDiseaseExamination,
+  coagulationFunctionExamination
+} from './table.key';
+
 import autoTable from 'jspdf-autotable'
 import '../../../assets/font/NotoSansTC-Regular-normal'
-import html2canvas from 'html2canvas';
-import { borderBottomWidth } from 'html2canvas/dist/types/css/property-descriptors/border-width';
-
 
 @Component({
   selector: 'app-table',
   standalone: true,
-  imports: [CommonModule,IconDownloadComponent],
+  imports: [CommonModule, IconDownloadComponent],
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,6 +42,18 @@ export class TableComponent {
   @Output()
   backEvent = new EventEmitter();
   positiveResult = ['N', 'L'];
+  bloodRoutineExamination = bloodRoutineExamination as (keyof DataItem)[];
+  whiteBloodCellDifferentiation =
+    whiteBloodCellDifferentiation as (keyof DataItem)[];
+  bloodSugarExamination = bloodSugarExamination as (keyof DataItem)[];
+  liverFunctionExamination = liverFunctionExamination as (keyof DataItem)[];
+  bloodLipidExamination = bloodLipidExamination as (keyof DataItem)[];
+  generalUrineExamination = generalUrineExamination as (keyof DataItem)[];
+  urineSedimentExamination = urineSedimentExamination as (keyof DataItem)[];
+  liverDiseaseExamination = liverDiseaseExamination as (keyof DataItem)[];
+  sexDiseaseExamination = sexDiseaseExamination as (keyof DataItem)[];
+  coagulationFunctionExamination = coagulationFunctionExamination as (keyof DataItem)[];
+
 
   criteria = {
     SCC: '<2.7',
@@ -105,6 +127,12 @@ export class TableComponent {
     RA: '<14.0',
     STSRPR: '(-):Non-Reactive',
     allergen: '',
+    HBsAg: '(-)<1.0;(+)≧1.0',
+    HBsAb: '(+)≧10',
+    HIV: '(-)',
+    PT: '9.4-12.5 ; MNPT: 11.3',
+    APTT: '28.0-40.0 ; MNAPTT: 33.6',
+    INR:'0.85-1.15'
   };
   units = {
     SCC: 'ng/mL',
@@ -178,6 +206,12 @@ export class TableComponent {
     RA: 'IU/ mL',
     STSRPR: '',
     allergen: '',
+    PT: 'sec',
+    APTT: 'sec',
+    INR:'',
+    HBsAg: 'S/CO',
+    HBsAb: 'mIU/mL',
+    HIV: 'S/CO',
   };
 
   generatePdf(data: any) {
@@ -190,6 +224,7 @@ export class TableComponent {
 
     doc.setTextColor('#58636d')
     autoTable(doc,{html:'#pdfTable',
+      includeHiddenHtml:true,
       useCss:true,
       styles: {
       font: 'NotoSansTC-Regular',
@@ -204,6 +239,16 @@ export class TableComponent {
 
   })
     doc.save('table.pdf');
+  }
+
+  checkCategoryTitle(categoryArray: string[]): boolean {
+    let exist = false
+     categoryArray.forEach((key) => {
+       exist = this.data().some((item: any) => {
+        return item[key]?.value !== ''
+      })
+    })
+    return exist
   }
 
 
@@ -227,7 +272,6 @@ export class TableComponent {
   }
 
   getKeys() {
-    // console.log(Object.keys(this.titleMapping))
     return Object.keys(this.titleMapping) as (keyof DataItem)[];
   }
 
@@ -307,6 +351,12 @@ export class TableComponent {
     allergen: '224項過敏原/224項過敏?',
     RA: '類風濕性關節炎因子/RA(定量)',
     STSRPR: '梅毒血清反應/STS-RPR',
+    INR:'INR/INR',
+    HBsAg:'Ｂ型肝炎表面抗原/HBsAg',
+    HBsAb:'Ｂ型肝炎表面抗體/HBsAb',
+    HIV:'愛滋病感染篩檢/HIV',
+    PT:'凝血酶原時間/PT',
+    APTT: '部份凝血活脢時間/APTT',
   };
 }
 
@@ -385,8 +435,3 @@ interface DataItem {
 }
 
 
-// var callAddFont = function () {
-//   this.addFileToVFS('NotoSansTC-Regular-normal.ttf', font);
-//   this.addFont('NotoSansTC-Regular-normal.ttf', 'NotoSansTC-Regular', 'normal');
-//   };
-//   jsPDF.API.events.push(['addFonts', callAddFont])

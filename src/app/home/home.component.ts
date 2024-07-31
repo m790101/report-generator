@@ -63,7 +63,15 @@ export class HomeComponent implements OnInit {
   }
   ngOnInit() {
     this.initForm();
+    this.scrollToTop()
   }
+
+  scrollToTop(){
+    setTimeout(() => {
+      window.scroll({ top: 0, left: 0, behavior: 'smooth' });
+    }, 300);
+  }
+
   next() {
     if (this.searchForm.invalid) {
       this.searchForm.markAllAsTouched();
@@ -117,6 +125,7 @@ export class HomeComponent implements OnInit {
     this.step.set(1)
     this.data.set([])
     this.searchForm.reset()
+    this.scrollToTop()
   }
 
   sortByDate(dataArray:any) {

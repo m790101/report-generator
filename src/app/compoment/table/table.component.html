@@ -1,5 +1,5 @@
 @if(data().length > 0) {
-<main #pdfTable>
+<main>
 
   <div class="px-2 mb-9">
     <div class="flex justify-between">
@@ -11,7 +11,257 @@
     </div>
     <p class="text-xl">{{ data()[0].name }}</p>
   </div>
-  <table id="pdfTable">
+<!-- this is for present table  -->
+<table class="mb-9">
+  <thead class="text-xl">
+    <tr>
+      <th class="">檢驗項目</th>
+      <th *ngFor="let item of data()">{{ getFormatDate(item.date) }}</th>
+      <th class="text-end">參考值說明</th>
+      <th class="text-end">單位</th>
+    </tr>
+  </thead>
+  <tbody class="text-lg">
+    @if(checkCategoryTitle(bloodRoutineExamination)){
+    <tr class="font-bold bg-slate-200">
+      <td >血液常規檢查</td>
+      <td *ngFor="let item of data()"></td>
+      <td ></td>
+      <td ></td>
+    </tr>
+  }
+    <ng-container *ngFor="let key of bloodRoutineExamination">
+      <tr *ngIf="hasValue(key)">
+        <td>{{ titleMapping[key] ?? "" }}</td>
+        <ng-container *ngFor="let item of data()">
+          <td
+            [style.color]="checkResult(item[key]?.resultNote)"
+            class="text-center"
+          >
+            {{ item[key]?.value }}
+          </td>
+        </ng-container>
+        <td class="text-end">{{ criteria[key] }}</td>
+        <td class="text-end">{{ units[key]}}</td>
+      </tr>
+    </ng-container>
+    @if(checkCategoryTitle(whiteBloodCellDifferentiation)){
+    <tr class="font-bold bg-slate-200">
+      <td  >白血球分離</td>
+      <td *ngFor="let item of data()"></td>
+      <td ></td>
+      <td ></td>
+    </tr>
+  }
+    <ng-container *ngFor="let key of whiteBloodCellDifferentiation">
+      <tr *ngIf="hasValue(key)">
+        <td>{{ titleMapping[key] ?? "" }}</td>
+        <ng-container *ngFor="let item of data()">
+          <td
+            [style.color]="checkResult(item[key]?.resultNote)"
+            class="text-center"
+          >
+            {{ item[key]?.value }}
+          </td>
+        </ng-container>
+        <td class="text-end">{{ criteria[key] }}</td>
+        <td class="text-end">{{ units[key]}}</td>
+      </tr>
+    </ng-container>
+    @if(checkCategoryTitle(bloodSugarExamination)){
+    <tr class="font-bold bg-slate-200">
+      <td  >糖尿病檢查</td>
+      <td *ngFor="let item of data()"></td>
+      <td ></td>
+      <td ></td>
+    </tr>
+  }
+    <ng-container *ngFor="let key of bloodSugarExamination">
+      <tr *ngIf="hasValue(key)">
+        <td>{{ titleMapping[key] ?? "" }}</td>
+        <ng-container *ngFor="let item of data()">
+          <td
+            [style.color]="checkResult(item[key]?.resultNote)"
+            class="text-center"
+          >
+            {{ item[key]?.value }}
+          </td>
+        </ng-container>
+        <td class="text-end">{{ criteria[key] }}</td>
+        <td class="text-end">{{ units[key]}}</td>
+      </tr>
+    </ng-container>
+    @if(checkCategoryTitle(liverFunctionExamination)){
+    <tr class="font-bold bg-slate-200">
+      <td  >肝膽功能檢查</td>
+      <td *ngFor="let item of data()"></td>
+      <td ></td>
+      <td ></td>
+    </tr>
+  }
+    <ng-container *ngFor="let key of liverFunctionExamination">
+      <tr *ngIf="hasValue(key)">
+        <td>{{ titleMapping[key] ?? "" }}</td>
+        <ng-container *ngFor="let item of data()">
+          <td
+            [style.color]="checkResult(item[key]?.resultNote)"
+            class="text-center"
+          >
+            {{ item[key]?.value }}
+          </td>
+        </ng-container>
+        <td class="text-end">{{ criteria[key] }}</td>
+        <td class="text-end">{{ units[key]}}</td>
+      </tr>
+    </ng-container>
+    @if(checkCategoryTitle(bloodLipidExamination)){
+    <tr class="font-bold bg-slate-200">
+      <td  >血脂肪檢查</td>
+      <td *ngFor="let item of data()"></td>
+      <td ></td>
+      <td ></td>
+    </tr>
+  }
+    <ng-container *ngFor="let key of bloodLipidExamination">
+      <tr *ngIf="hasValue(key)">
+        <td>{{ titleMapping[key] ?? "" }}</td>
+        <ng-container *ngFor="let item of data()">
+          <td
+            [style.color]="checkResult(item[key]?.resultNote)"
+            class="text-center"
+          >
+            {{ item[key]?.value }}
+          </td>
+        </ng-container>
+        <td class="text-end">{{ criteria[key] }}</td>
+        <td class="text-end">{{ units[key]}}</td>
+      </tr>
+    </ng-container>
+    @if(checkCategoryTitle(generalUrineExamination)){
+    <tr class="font-bold bg-slate-200">
+      <td  >一般尿液檢查</td>
+      <td *ngFor="let item of data()"></td>
+      <td ></td>
+      <td ></td>
+    </tr>
+  }
+    <ng-container *ngFor="let key of generalUrineExamination">
+      <tr *ngIf="hasValue(key)">
+        <td>{{ titleMapping[key] ?? "" }}</td>
+        <ng-container *ngFor="let item of data()">
+          <td
+            [style.color]="checkResult(item[key]?.resultNote)"
+            class="text-center"
+          >
+            {{ item[key]?.value }}
+          </td>
+        </ng-container>
+        <td class="text-end">{{ criteria[key] }}</td>
+        <td class="text-end">{{ units[key]}}</td>
+      </tr>
+    </ng-container>
+    @if(checkCategoryTitle(urineSedimentExamination)){
+    <tr class="font-bold bg-slate-200">
+      <td  >尿液沈渣浸檢</td>
+      <td *ngFor="let item of data()"></td>
+      <td ></td>
+      <td ></td>
+    </tr>
+  }
+    <ng-container *ngFor="let key of urineSedimentExamination">
+      <tr *ngIf="hasValue(key)">
+        <td>{{ titleMapping[key] ?? "" }}</td>
+        <ng-container *ngFor="let item of data()">
+          <td
+            [style.color]="checkResult(item[key]?.resultNote)"
+            class="text-center"
+          >
+            {{ item[key]?.value }}
+          </td>
+        </ng-container>
+        <td class="text-end">{{ criteria[key] }}</td>
+        <td class="text-end">{{ units[key]}}</td>
+      </tr>
+    </ng-container>
+    @if(checkCategoryTitle(liverDiseaseExamination)){
+    <tr class="font-bold bg-slate-200">
+      <td  >病毒肝炎檢查</td>
+      <td *ngFor="let item of data()"></td>
+      <td ></td>
+      <td ></td>
+    </tr>
+  }
+    <ng-container *ngFor="let key of liverDiseaseExamination">
+      <tr *ngIf="hasValue(key)">
+        <td>{{ titleMapping[key] ?? "" }}</td>
+        <ng-container *ngFor="let item of data()">
+          <td
+            [style.color]="checkResult(item[key]?.resultNote)"
+            class="text-center"
+          >
+            {{ item[key]?.value }}
+          </td>
+        </ng-container>
+        <td class="text-end">{{ criteria[key] }}</td>
+        <td class="text-end">{{ units[key]}}</td>
+      </tr>
+    </ng-container>
+
+    @if(checkCategoryTitle(sexDiseaseExamination)){
+    <tr class="font-bold bg-slate-200">
+      <td  >性病檢查</td>
+      <td *ngFor="let item of data()"></td>
+      <td ></td>
+      <td ></td>
+    </tr>
+  }
+    <ng-container *ngFor="let key of sexDiseaseExamination">
+      <tr *ngIf="hasValue(key)">
+        <td>{{ titleMapping[key] ?? "" }}</td>
+        <ng-container *ngFor="let item of data()">
+          <td
+            [style.color]="checkResult(item[key]?.resultNote)"
+            class="text-center"
+          >
+            {{ item[key]?.value }}
+          </td>
+        </ng-container>
+        <td class="text-end">{{ criteria[key] }}</td>
+        <td class="text-end">{{ units[key]}}</td>
+      </tr>
+    </ng-container>
+
+    @if(checkCategoryTitle(coagulationFunctionExamination)){
+    <tr class="font-bold bg-slate-200">
+      <td  >血液凝固檢查</td>
+      <td *ngFor="let item of data()"></td>
+      <td ></td>
+      <td ></td>
+    </tr>
+  }
+    <ng-container *ngFor="let key of coagulationFunctionExamination">
+      <tr *ngIf="hasValue(key)">
+        <td>{{ titleMapping[key] ?? "" }}</td>
+        <ng-container *ngFor="let item of data()">
+          <td
+            [style.color]="checkResult(item[key]?.resultNote)"
+            class="text-center"
+          >
+            {{ item[key]?.value }}
+          </td>
+        </ng-container>
+        <td class="text-end">{{ criteria[key] }}</td>
+        <td class="text-end">{{ units[key]}}</td>
+      </tr>
+    </ng-container>
+  </tbody>
+</table>
+<!-- this is for present table end -->
+
+
+<main #pdfTable>
+
+  <table class="mb-9 hidden" id="pdfTable">
     <thead class="text-xs">
       <tr>
         <th class="">檢驗項目</th>
@@ -21,7 +271,15 @@
       </tr>
     </thead>
     <tbody class="text-xs">
-      <ng-container *ngFor="let key of getKeys()">
+      @if(checkCategoryTitle(bloodRoutineExamination)){
+      <tr class="font-bold bg-slate-200">
+        <td >血液常規檢查</td>
+        <td *ngFor="let item of data()"></td>
+        <td ></td>
+        <td ></td>
+      </tr>
+    }
+      <ng-container *ngFor="let key of bloodRoutineExamination">
         <tr *ngIf="hasValue(key)">
           <td>{{ titleMapping[key] ?? "" }}</td>
           <ng-container *ngFor="let item of data()">
@@ -33,10 +291,220 @@
             </td>
           </ng-container>
           <td class="text-end">{{ criteria[key] }}</td>
-          <td class="text-end">{{ units[key] }}</td>
+          <td class="text-end">{{ units[key]}}</td>
+        </tr>
+      </ng-container>
+      @if(checkCategoryTitle(whiteBloodCellDifferentiation)){
+      <tr class="font-bold bg-slate-200">
+        <td  >白血球分離</td>
+        <td *ngFor="let item of data()"></td>
+        <td ></td>
+        <td ></td>
+      </tr>
+    }
+      <ng-container *ngFor="let key of whiteBloodCellDifferentiation">
+        <tr *ngIf="hasValue(key)">
+          <td>{{ titleMapping[key] ?? "" }}</td>
+          <ng-container *ngFor="let item of data()">
+            <td
+              [style.color]="checkResult(item[key]?.resultNote)"
+              class="text-center"
+            >
+              {{ item[key]?.value }}
+            </td>
+          </ng-container>
+          <td class="text-end">{{ criteria[key] }}</td>
+          <td class="text-end">{{ units[key]}}</td>
+        </tr>
+      </ng-container>
+      @if(checkCategoryTitle(bloodSugarExamination)){
+      <tr class="font-bold bg-slate-200">
+        <td  >糖尿病檢查</td>
+        <td *ngFor="let item of data()"></td>
+        <td ></td>
+        <td ></td>
+      </tr>
+    }
+      <ng-container *ngFor="let key of bloodSugarExamination">
+        <tr *ngIf="hasValue(key)">
+          <td>{{ titleMapping[key] ?? "" }}</td>
+          <ng-container *ngFor="let item of data()">
+            <td
+              [style.color]="checkResult(item[key]?.resultNote)"
+              class="text-center"
+            >
+              {{ item[key]?.value }}
+            </td>
+          </ng-container>
+          <td class="text-end">{{ criteria[key] }}</td>
+          <td class="text-end">{{ units[key]}}</td>
+        </tr>
+      </ng-container>
+      @if(checkCategoryTitle(liverFunctionExamination)){
+      <tr class="font-bold bg-slate-200">
+        <td  >肝膽功能檢查</td>
+        <td *ngFor="let item of data()"></td>
+        <td ></td>
+        <td ></td>
+      </tr>
+    }
+      <ng-container *ngFor="let key of liverFunctionExamination">
+        <tr *ngIf="hasValue(key)">
+          <td>{{ titleMapping[key] ?? "" }}</td>
+          <ng-container *ngFor="let item of data()">
+            <td
+              [style.color]="checkResult(item[key]?.resultNote)"
+              class="text-center"
+            >
+              {{ item[key]?.value }}
+            </td>
+          </ng-container>
+          <td class="text-end">{{ criteria[key] }}</td>
+          <td class="text-end">{{ units[key]}}</td>
+        </tr>
+      </ng-container>
+      @if(checkCategoryTitle(bloodLipidExamination)){
+      <tr class="font-bold bg-slate-200">
+        <td  >血脂肪檢查</td>
+        <td *ngFor="let item of data()"></td>
+        <td ></td>
+        <td ></td>
+      </tr>
+    }
+      <ng-container *ngFor="let key of bloodLipidExamination">
+        <tr *ngIf="hasValue(key)">
+          <td>{{ titleMapping[key] ?? "" }}</td>
+          <ng-container *ngFor="let item of data()">
+            <td
+              [style.color]="checkResult(item[key]?.resultNote)"
+              class="text-center"
+            >
+              {{ item[key]?.value }}
+            </td>
+          </ng-container>
+          <td class="text-end">{{ criteria[key] }}</td>
+          <td class="text-end">{{ units[key]}}</td>
+        </tr>
+      </ng-container>
+      @if(checkCategoryTitle(generalUrineExamination)){
+      <tr class="font-bold bg-slate-200">
+        <td  >一般尿液檢查</td>
+        <td *ngFor="let item of data()"></td>
+        <td ></td>
+        <td ></td>
+      </tr>
+    }
+      <ng-container *ngFor="let key of generalUrineExamination">
+        <tr *ngIf="hasValue(key)">
+          <td>{{ titleMapping[key] ?? "" }}</td>
+          <ng-container *ngFor="let item of data()">
+            <td
+              [style.color]="checkResult(item[key]?.resultNote)"
+              class="text-center"
+            >
+              {{ item[key]?.value }}
+            </td>
+          </ng-container>
+          <td class="text-end">{{ criteria[key] }}</td>
+          <td class="text-end">{{ units[key]}}</td>
+        </tr>
+      </ng-container>
+      @if(checkCategoryTitle(urineSedimentExamination)){
+      <tr class="font-bold bg-slate-200">
+        <td  >尿液沈渣浸檢</td>
+        <td *ngFor="let item of data()"></td>
+        <td ></td>
+        <td ></td>
+      </tr>
+    }
+      <ng-container *ngFor="let key of urineSedimentExamination">
+        <tr *ngIf="hasValue(key)">
+          <td>{{ titleMapping[key] ?? "" }}</td>
+          <ng-container *ngFor="let item of data()">
+            <td
+              [style.color]="checkResult(item[key]?.resultNote)"
+              class="text-center"
+            >
+              {{ item[key]?.value }}
+            </td>
+          </ng-container>
+          <td class="text-end">{{ criteria[key] }}</td>
+          <td class="text-end">{{ units[key]}}</td>
+        </tr>
+      </ng-container>
+      @if(checkCategoryTitle(liverDiseaseExamination)){
+      <tr class="font-bold bg-slate-200">
+        <td  >病毒肝炎檢查</td>
+        <td *ngFor="let item of data()"></td>
+        <td ></td>
+        <td ></td>
+      </tr>
+    }
+      <ng-container *ngFor="let key of liverDiseaseExamination">
+        <tr *ngIf="hasValue(key)">
+          <td>{{ titleMapping[key] ?? "" }}</td>
+          <ng-container *ngFor="let item of data()">
+            <td
+              [style.color]="checkResult(item[key]?.resultNote)"
+              class="text-center"
+            >
+              {{ item[key]?.value }}
+            </td>
+          </ng-container>
+          <td class="text-end">{{ criteria[key] }}</td>
+          <td class="text-end">{{ units[key]}}</td>
+        </tr>
+      </ng-container>
+
+      @if(checkCategoryTitle(sexDiseaseExamination)){
+      <tr class="font-bold bg-slate-200">
+        <td  >性病檢查</td>
+        <td *ngFor="let item of data()"></td>
+        <td ></td>
+        <td ></td>
+      </tr>
+    }
+      <ng-container *ngFor="let key of sexDiseaseExamination">
+        <tr *ngIf="hasValue(key)">
+          <td>{{ titleMapping[key] ?? "" }}</td>
+          <ng-container *ngFor="let item of data()">
+            <td
+              [style.color]="checkResult(item[key]?.resultNote)"
+              class="text-center"
+            >
+              {{ item[key]?.value }}
+            </td>
+          </ng-container>
+          <td class="text-end">{{ criteria[key] }}</td>
+          <td class="text-end">{{ units[key]}}</td>
+        </tr>
+      </ng-container>
+
+      @if(checkCategoryTitle(coagulationFunctionExamination)){
+      <tr class="font-bold bg-slate-200">
+        <td  >血液凝固檢查</td>
+        <td *ngFor="let item of data()"></td>
+        <td ></td>
+        <td ></td>
+      </tr>
+    }
+      <ng-container *ngFor="let key of coagulationFunctionExamination">
+        <tr *ngIf="hasValue(key)">
+          <td>{{ titleMapping[key] ?? "" }}</td>
+          <ng-container *ngFor="let item of data()">
+            <td
+              [style.color]="checkResult(item[key]?.resultNote)"
+              class="text-center"
+            >
+              {{ item[key]?.value }}
+            </td>
+          </ng-container>
+          <td class="text-end">{{ criteria[key] }}</td>
+          <td class="text-end">{{ units[key]}}</td>
         </tr>
       </ng-container>
     </tbody>
   </table>
+</main>
 </main>
 }
