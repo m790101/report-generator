@@ -37,7 +37,10 @@ export const liverFunctionExamination = [
 
 export const kidneyFunctionExamination = [
   'BUN',
-  'CreaB'
+  'CreaB',
+  'UA',
+  'eGFR'
+
 ];
 export const bloodLipidExamination = [
   'CHDL',
