@@ -241,7 +241,6 @@ export class CsvService {
     let res:any = [];
     const map = new Map();
     let id = 1
-    console.log(data)
     data.forEach((item: any) => {
       const key = item.name + item.date + id;
       if (map.has(key)) {
@@ -309,7 +308,6 @@ export class CsvService {
 
 
     const sortedData = this.sortByName(dataArray)
-    // console.log(sortedData)
     return sortedData;
   }
 }
