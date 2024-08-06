@@ -21,7 +21,8 @@ import {
   urineSedimentExamination,
   liverDiseaseExamination,
   sexDiseaseExamination,
-  coagulationFunctionExamination
+  coagulationFunctionExamination,
+  kidneyFunctionExamination
 } from './table.key';
 
 import autoTable from 'jspdf-autotable'
@@ -53,6 +54,7 @@ export class TableComponent {
   liverDiseaseExamination = liverDiseaseExamination as (keyof DataItem)[];
   sexDiseaseExamination = sexDiseaseExamination as (keyof DataItem)[];
   coagulationFunctionExamination = coagulationFunctionExamination as (keyof DataItem)[];
+  kidneyFunctionExamination = kidneyFunctionExamination as (keyof DataItem)[];
 
 
   criteria = {

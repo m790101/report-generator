@@ -137,6 +137,29 @@
         <td class="text-end">{{ units[key]}}</td>
       </tr>
     </ng-container>
+    @if(checkCategoryTitle(kidneyFunctionExamination)){
+      <tr class="font-bold bg-slate-200">
+        <td  >腎功能檢查</td>
+        <td *ngFor="let item of data()"></td>
+        <td ></td>
+        <td ></td>
+      </tr>
+    }
+      <ng-container *ngFor="let key of kidneyFunctionExamination">
+        <tr *ngIf="hasValue(key)">
+          <td>{{ titleMapping[key] ?? "" }}</td>
+          <ng-container *ngFor="let item of data()">
+            <td
+              [style.color]="checkResult(item[key]?.resultNote)"
+              class="text-center"
+            >
+              {{ item[key]?.value }}
+            </td>
+          </ng-container>
+          <td class="text-end">{{ criteria[key] }}</td>
+          <td class="text-end">{{ units[key]}}</td>
+        </tr>
+      </ng-container>
     @if(checkCategoryTitle(generalUrineExamination)){
     <tr class="font-bold bg-slate-200">
       <td  >一般尿液檢查</td>
@@ -386,6 +409,29 @@
           <td class="text-end">{{ units[key]}}</td>
         </tr>
       </ng-container>
+      @if(checkCategoryTitle(kidneyFunctionExamination)){
+        <tr class="font-bold bg-slate-200">
+          <td  >腎功能檢查</td>
+          <td *ngFor="let item of data()"></td>
+          <td ></td>
+          <td ></td>
+        </tr>
+      }
+        <ng-container *ngFor="let key of kidneyFunctionExamination">
+          <tr *ngIf="hasValue(key)">
+            <td>{{ titleMapping[key] ?? "" }}</td>
+            <ng-container *ngFor="let item of data()">
+              <td
+                [style.color]="checkResult(item[key]?.resultNote)"
+                class="text-center"
+              >
+                {{ item[key]?.value }}
+              </td>
+            </ng-container>
+            <td class="text-end">{{ criteria[key] }}</td>
+            <td class="text-end">{{ units[key]}}</td>
+          </tr>
+        </ng-container>
       @if(checkCategoryTitle(generalUrineExamination)){
       <tr class="font-bold bg-slate-200">
         <td  >一般尿液檢查</td>
