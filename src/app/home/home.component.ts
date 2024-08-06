@@ -80,7 +80,7 @@ export class HomeComponent implements OnInit {
       const filterDate = this.inputDate.filter((person:any)=>{
         return person.name === name
       })
-      const resData = this.sortByDate(filterDate)
+      const resData = this.sortByDateAndId(filterDate)
       this.data.set(resData);
     }
   }
@@ -128,11 +128,16 @@ export class HomeComponent implements OnInit {
     this.scrollToTop()
   }
 
-  sortByDate(dataArray:any) {
+  sortByDateAndId(dataArray:any) {
     return dataArray.sort((a:any, b:any) => {
+      if(a.date !== b.date){
         const dateA = moment(a.date, "YYYYMMDD");
         const dateB = moment(b.date, "YYYYMMDD");
         return dateA.diff(dateB);
+      } else{
+        return b.id - a.id
+      }
+
     });
 }
 }
