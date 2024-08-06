@@ -130,14 +130,9 @@ export class HomeComponent implements OnInit {
 
   sortByDateAndId(dataArray:any) {
     return dataArray.sort((a:any, b:any) => {
-      if(a.date !== b.date){
-        const dateA = moment(a.date, "YYYYMMDD");
-        const dateB = moment(b.date, "YYYYMMDD");
-        return dateA.diff(dateB);
-      } else{
-        return b.id - a.id
-      }
-
+      const dateA = moment(a.date, "YYYYMMDD");
+      const dateB = moment(b.date, "YYYYMMDD");
+      return dateA.diff(dateB);
     });
 }
 }

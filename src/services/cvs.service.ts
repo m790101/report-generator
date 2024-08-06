@@ -241,8 +241,9 @@ export class CsvService {
     let res:any = [];
     const map = new Map();
     let id = 1
+    console.log(data)
     data.forEach((item: any) => {
-      const key = item.name + item.date;
+      const key = item.name + item.date + id;
       if (map.has(key)) {
         let singleData = map.get(key);
 
@@ -251,37 +252,24 @@ export class CsvService {
         if(!singleData[titleChange]){
           console.log(title)
         }
-
-        if(singleData[titleChange]?.value.length > 0){
-          // add new one
-          if (map.has(key + '2')){
-            let secondData = map.get(key+'2');
-            secondData[titleChange] = {
-              value: item.value,
-              resultNote: item.resultNote,
-              units: item.units,
-              criteria: item.criteria,
-              title: item.title
-            }
-          } else {
-            const newData = makeNewDataItem(item,titleChange,id+1)
-            const updateKey = item.name + item.date + '2'
+        //  報告第一筆資料是WBC
+        if(titleChange === 'WBC'){
+          const newData = makeNewDataItem(item,titleChange,id+1)
+            const updateKey = item.name + item.date + (id+1)
             map.set(updateKey, newData);
-          }
-        }
-        else{
+            id++
+        } else{
           singleData[titleChange] = {
-            value: item.value,
-            resultNote: item.resultNote,
-            units: item.units,
-            criteria: item.criteria,
-            title: item.title
+                value: item.value,
+                resultNote: item.resultNote,
+                units: item.units,
+                criteria: item.criteria,
+                title: item.title
           }
-
         }
+
       } else {
         const title = item.title;
-
         const titleChange = keyMapping[title];
         const newData = makeNewDataItem(item,titleChange,id)
         map.set(key, newData);
