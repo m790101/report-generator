@@ -42,6 +42,8 @@ export class TableComponent {
 
   @Output()
   backEvent = new EventEmitter();
+  isHighLight = false;
+  highlightYellow = '#fff299'
   positiveResult = ['N', 'L'];
   bloodRoutineExamination = bloodRoutineExamination as (keyof DataItem)[];
   whiteBloodCellDifferentiation =
@@ -279,6 +281,14 @@ export class TableComponent {
 
   getFormatDate(date: string) {
     return moment(date, 'YYYYMMDD').format('YYYY/MM/DD');
+  }
+
+  isHighLightRow():string {
+    return this.isHighLight ? this.highlightYellow : '';
+  }
+
+  alterBloodExamSectionBg():void {
+    this.isHighLight = !this.isHighLight;
   }
 
   titleMapping: any = {
