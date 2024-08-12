@@ -8,7 +8,7 @@ The Report Generator is a tool designed to streamline the process of compiling h
 
 This tool was created to solve a common **challenge**: my girlfriend found it difficult to present treatment outcomes effectively by sending clients multiple reports from different days. The Report Generator simplifies this by combining all relevant data into one clear, comprehensive report.
 
-## Live Demo
+## Demo
 ![Imgur](https://i.imgur.com/wm6xX5x.png)
 ![Imgur](https://i.imgur.com/Zl2kpTQ.png)
 
