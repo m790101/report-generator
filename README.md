@@ -1,30 +1,26 @@
 # ReportGenerator
+![Imgur](https://i.imgur.com/2FBXxXw.png)
+## Overview
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.8.
+The Report Generator is a tool designed to streamline the process of compiling health check reports from multiple days into a single, cohesive document. This makes it easy to track and compare outcomes over time, eliminating the need to manually review and send multiple individual reports.
+
+## Purpose
+
+This tool was created to solve a common **challenge**: my girlfriend found it difficult to present treatment outcomes effectively by sending clients multiple reports from different days. The Report Generator simplifies this by combining all relevant data into one clear, comprehensive report.
+
+## Live Demo
+![Imgur](https://i.imgur.com/wm6xX5x.png)
+![Imgur](https://i.imgur.com/Zl2kpTQ.png)
+
+[View the Report Generator](https://m790101.github.io/report-generator/)
+
+
 
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Run `npm run start` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-## Code scaffolding
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
 
 
 version: 1.0.0
