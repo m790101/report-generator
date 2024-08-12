@@ -12,7 +12,7 @@ This tool was created to solve a common **challenge**: my girlfriend found it di
 ![Imgur](https://i.imgur.com/wm6xX5x.png)
 ![Imgur](https://i.imgur.com/Zl2kpTQ.png)
 
-[View the Report Generator](https://m790101.github.io/report-generator/)
+<!-- [View the Report Generator](https://m790101.github.io/report-generator/) -->
 
 
 
