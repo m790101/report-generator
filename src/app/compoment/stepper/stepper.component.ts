@@ -38,6 +38,6 @@ export class StepperComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.step())
+
   }
 }
