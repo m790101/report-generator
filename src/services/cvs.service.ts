@@ -1,6 +1,109 @@
 import { rocToAd } from '../utils/date';
 
-
+const defaultData2: any = {
+  id: 1,
+  name: '',
+  date: '',
+  WBC: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 1 },
+  RBC: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 2 },
+  HgB: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 3 },
+  Hct: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 4 },
+  Neut: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 5 },
+  Lym: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 6 },
+  Mono: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 7 },
+  Baso: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 8 },
+  Eosin: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 9 },
+  PLT: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 10 },
+  MCH: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 11 },
+  MCV: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 12 },
+  MCHC: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 13 },
+  UColor: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 14 },
+  UPRO: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 15 },
+  UGLU: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 16 },
+  UURO: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 17 },
+  UBIL: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 18 },
+  UKET: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 19 },
+  UPH: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 20 },
+  UNIT: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 21 },
+  USG: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 22 },
+  Other: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 23 },
+  ULEU: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 24 },
+  UOB: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 25 },
+  URBC: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 26 },
+  UWBC: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 27 },
+  UEP: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 28 },
+  UCRY: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 29 },
+  UCAS: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 30 },
+  UBAC: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 31 },
+  CHDL: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 32 },
+  ACGlu: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 33 },
+  HBA1c: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 34 },
+  TG: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 35 },
+  CHOL: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 36 },
+  HDLC: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 37 },
+  LDLC: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 38 },
+  TBili: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 39 },
+  DBili: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 40 },
+  SGOT: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 41 },
+  SGPT: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 42 },
+  rGT: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 43 },
+  ALKP: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 44 },
+  BUN: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 45 },
+  CreaB: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 46 },
+  UA: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 47 },
+  TP: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 48 },
+  ALB: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 49 },
+  GLO: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 50 },
+  AG: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 51 },
+  eGFR: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 52 },
+  SCC: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  ANA: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  Thyroglobulin: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  AntiTPO: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  T4: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  FreeT4: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  FreeT3: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  TSH: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  T3: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  CEA: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  AFP: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  Cyfra: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  CA125: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  CA199: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  CA153: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  CA724: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  allergen: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  RA: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  STSRPR: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  PSA: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  CRP: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  TroponinI: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  EBVCAIgA: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  HCG: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  SCCO: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  HCVAb: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  HAVIgG: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  UA2: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  PT: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  APTT: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  INR: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  HBsAg: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  HBsAb: { title: '', value: '', units: '', resultNote: '', criteria: '',index: -1 },
+  HIV: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  Cortisol: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  DHEAS: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  Testostero: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  Fibrinogen: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  AMH: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  PCGlu: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  C13UreaBefore: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  C13UreaAfter: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  hsCRP: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  Ferritin: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  C13UreaDOB: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  breath: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 },
+  C13Breath: { title: '', value: '', units: '', resultNote: '', criteria: '', index: -1 }
+}
 const defaultData: any = {
   id:1,
   name: '',
@@ -222,11 +325,12 @@ const columnMap: any = {
 
 function makeNewDataItem(item:any,titleChange:any,id:number){
   const newData = {
-    ...defaultData,
+    ...defaultData2,
     name: item.name,
     id: id,
     date: rocToAd(item.date),
     [titleChange]: {
+      ...defaultData2.titleChange,
       value: item.value,
       resultNote: item.resultNote,
       units: item.units,
@@ -241,6 +345,7 @@ export class CsvService {
     let res:any = [];
     const map = new Map();
     let id = 1
+    let index = 0
     data.forEach((item: any) => {
       const key = item.name + item.date + id;
       if (map.has(key)) {
@@ -248,23 +353,31 @@ export class CsvService {
 
         const title = item.title;
         const titleChange = keyMapping[title];
+        // 如果沒有配到title
         if(!singleData[titleChange]){
           console.log(title)
         }
+        // const duplicateData = singleData[titleChange].value !== ''
         //  報告第一筆資料是WBC
-        if(titleChange === 'WBC'){
+
+        if(singleData[titleChange].index <= index && singleData[titleChange].index > 0){
           const newData = makeNewDataItem(item,titleChange,id+1)
             const updateKey = item.name + item.date + (id+1)
             map.set(updateKey, newData);
             id++
+            index = singleData[titleChange].index;
+
         } else{
           singleData[titleChange] = {
+                ...singleData[titleChange],
                 value: item.value,
                 resultNote: item.resultNote,
                 units: item.units,
                 criteria: item.criteria,
                 title: item.title
           }
+          index = singleData[titleChange].index;
+
         }
 
       } else {
@@ -272,6 +385,7 @@ export class CsvService {
         const titleChange = keyMapping[title];
         const newData = makeNewDataItem(item,titleChange,id)
         map.set(key, newData);
+        index = 1;
       }
     });
 
