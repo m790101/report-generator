@@ -55,6 +55,7 @@ export class HomeComponent implements OnInit {
   data: any = signal([]);
   nameSet = new Set()
   availableNames = signal([]);
+  dataCache:any = []
 
   initForm() {
     this.searchForm = this.fb.group({
@@ -81,8 +82,19 @@ export class HomeComponent implements OnInit {
         return person.name === name
       })
       const resData = this.sortByDateAndId(filterDate)
+      this.dataCache = resData
+      console.log(resData)
       this.data.set(resData);
     }
+  }
+
+
+  handleSwap($event:any){
+    const temp = this.dataCache[$event]
+    this.dataCache[$event] = this.dataCache[$event-1]
+    this.dataCache[$event-1] = temp
+    this.data.set([]);
+    this.data.set(this.dataCache);
   }
 
   filterData(data: any, name: string) {
@@ -130,9 +142,13 @@ export class HomeComponent implements OnInit {
 
   sortByDateAndId(dataArray:any) {
     return dataArray.sort((a:any, b:any) => {
-      const dateA = moment(a.date, "YYYYMMDD");
-      const dateB = moment(b.date, "YYYYMMDD");
-      return dateA.diff(dateB);
+      if(a.date !== b.date){
+        const dateA = moment(a.date, "YYYYMMDD");
+        const dateB = moment(b.date, "YYYYMMDD");
+        return dateA.diff(dateB);
+      } else{
+        return a.id - b.id
+      }
     });
 }
 }

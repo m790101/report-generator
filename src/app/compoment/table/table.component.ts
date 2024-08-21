@@ -42,6 +42,9 @@ export class TableComponent {
 
   @Output()
   backEvent = new EventEmitter();
+  swapEvent = new EventEmitter<any>();
+
+
   isHighLight = false;
   highlightYellow = '#fff299'
   positiveResult = ['N', 'L'];
@@ -255,6 +258,10 @@ export class TableComponent {
     return exist
   }
 
+
+  swap(index:number){
+    this.backEvent.emit(index);
+  }
 
   hasValue(key: any): boolean {
     return this.data().some(
