@@ -24,7 +24,14 @@
     <thead class="text-xl">
       <tr>
         <th class="">檢驗項目</th>
-        <th *ngFor="let item of data()">{{ getFormatDate(item.date) }}</th>
+        <th *ngFor="let item of data(); index as i">
+          <div>
+            @if(i !== 0 ){
+              <button (click)="swap(i)">swap</button>
+            }
+            {{ getFormatDate(item.date) }}
+          </div>
+        </th>
         <th class="text-end">參考值說明</th>
         <th class="text-end">單位</th>
       </tr>
