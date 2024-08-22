@@ -23,17 +23,20 @@
   <table class="mb-9">
     <thead class="text-xl">
       <tr>
-        <th class="">檢驗項目</th>
-        <th *ngFor="let item of data(); index as i">
-          <div>
-            @if(i !== 0 ){
-              <button (click)="swap(i)">swap</button>
-            }
-            {{ getFormatDate(item.date) }}
+        <th class="align-bottom">檢驗項目</th>
+        <th *ngFor="let item of data(); index as i" class="align-bottom">
+          <div class="d-flex flex-column justify-content-end">
+
+            <button class="btn mb-5 font-light"
+            [style.opacity]="i !== 0 ? 1 : 0"
+            (click)="swap(i)">交換(向前)</button>
+            <div>
+              {{ getFormatDate(item.date) }}
+            </div>
           </div>
         </th>
-        <th class="text-end">參考值說明</th>
-        <th class="text-end">單位</th>
+        <th class="text-end align-bottom">參考值說明</th>
+        <th class="text-end align-bottom">單位</th>
       </tr>
     </thead>
     <tbody class="text-lg">
