@@ -64,7 +64,7 @@
     </div>
   </section>
   <section class="mt-36 flex justify-center">
-    <app-table *ngIf="step() === 2" [data]="data" (swapEvent)="handleSwap($event)" (backEvent)="handleSwap($event)"></app-table>
+    <app-table *ngIf="step() === 2" [data]="data" [dataForPdf]="dataForPdf" (hideEmit)="handleHide($event)" (showEvent)="handleShow($event)" (swapEvent)="handleSwap($event)"></app-table>
   </section>
   <footer class="text-l" *ngIf="step() === 1">
     by HAOWEN

@@ -4,9 +4,13 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnInit,
   Output,
   Signal,
+  computed,
+  effect,
   output,
+  signal,
 } from '@angular/core';
 import moment from 'moment';
 import jsPDF from 'jspdf';
@@ -27,27 +31,41 @@ import {
 
 import autoTable from 'jspdf-autotable'
 import '../../../assets/font/NotoSansTC-Regular-normal'
+import { IconVisibleComponent } from '../icon-visible/icon-visible.component';
+import { IconInvisibleComponent } from '../icon-invisible/icon-invisible.component';
 
 @Component({
   selector: 'app-table',
   standalone: true,
-  imports: [CommonModule, IconDownloadComponent],
+  imports: [CommonModule, IconDownloadComponent,IconVisibleComponent,IconInvisibleComponent],
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableComponent {
+export class TableComponent implements OnInit {
   @Input() data!: Signal<any>;
   @Input() step!: Signal<number>;
+  @Input() dataForPdf!: Signal<any>;
 
   @Output()
   backEvent = new EventEmitter();
-  swapEvent = new EventEmitter<any>();
+  @Output()
+  swapEvent = new EventEmitter();
+  @Output()
+  hideEmit = new EventEmitter();
+  @Output()
+  showEvent= new EventEmitter();
+
 
 
   isHighLight = false;
   highlightYellow = '#fff299'
+  hiddenGray = '#f2f2f2'
+  hiddenOpacity = '0.4'
   positiveResult = ['N', 'L'];
+  showIconState:boolean[] = []
+  hideItemSet = new Set();
+
   bloodRoutineExamination = bloodRoutineExamination as (keyof DataItem)[];
   whiteBloodCellDifferentiation =
     whiteBloodCellDifferentiation as (keyof DataItem)[];
@@ -221,8 +239,17 @@ export class TableComponent {
     HIV: 'S/CO',
   };
 
-  generatePdf(data: any) {
+  constructor() {
 
+    effect(() => {
+      this.data().forEach((item:any)=>{
+        this.showIconState.push(true)
+      })
+    })
+
+
+  }
+  generatePdf(data: any) {
     var doc = new jsPDF();
     const header = this.data()[0].name + ':'
     doc.setFont("NotoSansTC-Regular");
@@ -258,9 +285,26 @@ export class TableComponent {
     return exist
   }
 
+  ngOnInit() {
+
+  }
 
   swap(index:number){
-    this.backEvent.emit(index);
+    this.swapEvent.emit(index);
+  }
+
+  hide(item:any) {
+    this.hideItemSet.add(item);
+    this.showIconState[this.data().indexOf(item)] = false
+    console.log()
+    this.hideEmit.emit(item);
+  }
+
+  show(item:any){
+    this.hideItemSet.delete(item);
+    this.showIconState[this.data().indexOf(item)] = true
+    const payLoad = [...this.hideItemSet];
+    this.showEvent.emit(payLoad);
   }
 
   hasValue(key: any): boolean {
@@ -290,8 +334,8 @@ export class TableComponent {
     return moment(date, 'YYYYMMDD').format('YYYY/MM/DD');
   }
 
-  isHighLightRow():string {
-    return this.isHighLight ? this.highlightYellow : '';
+  isHighLightRow():boolean {
+    return this.isHighLight
   }
 
   alterBloodExamSectionBg():void {
