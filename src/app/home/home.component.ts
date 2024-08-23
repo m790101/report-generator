@@ -53,6 +53,7 @@ export class HomeComponent implements OnInit {
   inputDate: any = [];
 
   data: any = signal([]);
+  dataForPdf:any = signal([]);
   nameSet = new Set()
   availableNames = signal([]);
   dataCache:any = []
@@ -73,6 +74,27 @@ export class HomeComponent implements OnInit {
     }, 300);
   }
 
+  handleHide($event:any){
+    const date = $event.date
+    const itemId = $event.id
+    const data = [...this.dataForPdf()]
+
+    const dataFilter = data.filter((person:any)=>{
+      return (person.date !== date || person.id !== itemId)
+    })
+    this.dataForPdf.set(dataFilter)
+  }
+
+  handleShow($event:any){
+    const data = [...this.data()]
+    const dataFilter = data.filter((person:any)=>{
+      return !$event.some((item:any)=>{
+        return item.date === person.date && item.id === person.id
+      })
+    })
+    this.dataForPdf.set(dataFilter)
+  }
+
   next() {
     if (this.searchForm.invalid) {
       this.searchForm.markAllAsTouched();
@@ -83,7 +105,7 @@ export class HomeComponent implements OnInit {
       })
       const resData = this.sortByDateAndId(filterDate)
       this.dataCache = resData
-      console.log(resData)
+      this.dataForPdf.set(resData)
       this.data.set(resData);
     }
   }

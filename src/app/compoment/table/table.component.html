@@ -1,7 +1,11 @@
 @if(data().length > 0) {
 <main>
   <div class="flex justify-end align-center gap-3 p-5">
-    <button (click)="alterBloodExamSectionBg()" class="font-bold text-xl btn" [style.backgroundColor]="isHighLight?highlightYellow:''">
+    <button
+      (click)="alterBloodExamSectionBg()"
+      class="font-bold text-xl btn"
+      [style.backgroundColor]="isHighLight ? highlightYellow : ''"
+    >
       標示血脂肪檢查 @if(isHighLight){<span> ON</span>}@else{OFF}
     </button>
     <div
@@ -25,11 +29,28 @@
       <tr>
         <th class="align-bottom">檢驗項目</th>
         <th *ngFor="let item of data(); index as i" class="align-bottom">
-          <div class="d-flex flex-column justify-content-end">
-
-            <button class="btn mb-5 font-light"
-            [style.opacity]="i !== 0 ? 1 : 0"
-            (click)="swap(i)">交換(向前)</button>
+          <div class="d-flex flex-column justify-end">
+            <div class="flex justify-center">
+              @if(showIconState[i]){
+              <button class="btn mb-5 font-light" (click)="hide(item)">
+                <app-icon-visible></app-icon-visible>
+              </button>
+              } @else{
+              <button class="btn mb-5 font-light"(click)="show(item)" >
+                <app-icon-invisible></app-icon-invisible>
+              </button>
+              }
+            </div>
+            <button
+              class="btn mb-5 font-light text-sm  flex justify-center gap-2 items-center"
+              [style.opacity]="i !== 0 ? 1 : 0"
+              (click)="swap(i)"
+            >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 0 0-3.7-3.7 48.678 48.678 0 0 0-7.324 0 4.006 4.006 0 0 0-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 0 0 3.7 3.7 48.656 48.656 0 0 0 7.324 0 4.006 4.006 0 0 0 3.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3-3 3" />
+            </svg>
+            <span>(向前)</span>
+            </button>
             <div>
               {{ getFormatDate(item.date) }}
             </div>
@@ -43,18 +64,21 @@
       @if(checkCategoryTitle(bloodRoutineExamination)){
       <tr class="font-bold bg-slate-200">
         <td>血液常規檢查</td>
-        <td *ngFor="let item of data()"></td>
+        <td *ngFor="let item of data()"
+        ></td>
         <td></td>
         <td></td>
       </tr>
       }
       <ng-container *ngFor="let key of bloodRoutineExamination">
-        <tr *ngIf="hasValue(key)">
+        <tr *ngIf="hasValue(key)" >
           <td>{{ titleMapping[key] ?? "" }}</td>
-          <ng-container *ngFor="let item of data()">
+          <ng-container *ngFor="let item of data(); index as $index">
             <td
               [style.color]="checkResult(item[key]?.resultNote)"
               class="text-center"
+              [style.backgroundColor]="showIconState[$index] ? '' : hiddenGray"
+              [style.opacity]="showIconState[$index] ? '' : hiddenOpacity"
             >
               {{ item[key]?.value }}
             </td>
@@ -74,10 +98,12 @@
       <ng-container *ngFor="let key of whiteBloodCellDifferentiation">
         <tr *ngIf="hasValue(key)">
           <td>{{ titleMapping[key] ?? "" }}</td>
-          <ng-container *ngFor="let item of data()">
+          <ng-container *ngFor="let item of data(); index as $index">
             <td
               [style.color]="checkResult(item[key]?.resultNote)"
               class="text-center"
+              [style.backgroundColor]="showIconState[$index] ? '' : hiddenGray"
+              [style.opacity]="showIconState[$index] ? '' : hiddenOpacity"
             >
               {{ item[key]?.value }}
             </td>
@@ -97,10 +123,12 @@
       <ng-container *ngFor="let key of bloodSugarExamination">
         <tr *ngIf="hasValue(key)">
           <td>{{ titleMapping[key] ?? "" }}</td>
-          <ng-container *ngFor="let item of data()">
+          <ng-container *ngFor="let item of data(); index as $index">
             <td
               [style.color]="checkResult(item[key]?.resultNote)"
               class="text-center"
+              [style.backgroundColor]="showIconState[$index] ? '' : hiddenGray"
+              [style.opacity]="showIconState[$index] ? '' : hiddenOpacity"
             >
               {{ item[key]?.value }}
             </td>
@@ -120,10 +148,12 @@
       <ng-container *ngFor="let key of liverFunctionExamination">
         <tr *ngIf="hasValue(key)">
           <td>{{ titleMapping[key] ?? "" }}</td>
-          <ng-container *ngFor="let item of data()">
+          <ng-container *ngFor="let item of data();index as $index">
             <td
               [style.color]="checkResult(item[key]?.resultNote)"
               class="text-center"
+              [style.backgroundColor]="showIconState[$index] ? '' : hiddenGray"
+              [style.opacity]="showIconState[$index] ? '' : hiddenOpacity"
             >
               {{ item[key]?.value }}
             </td>
@@ -143,11 +173,12 @@
       <ng-container *ngFor="let key of bloodLipidExamination">
         <tr *ngIf="hasValue(key)">
           <td>{{ titleMapping[key] ?? "" }}</td>
-          <ng-container *ngFor="let item of data()">
+          <ng-container *ngFor="let item of data();index as $index">
             <td
               [style.color]="checkResult(item[key]?.resultNote)"
               class="text-center"
-              [style.backgroundColor]="isHighLightRow()"
+              [ngClass]="{ 'highlight': isHighLightRow(), 'bg-gray': !showIconState[$index] }"
+              [style.opacity]="showIconState[$index] ? '' : hiddenOpacity"
             >
               {{ item[key]?.value }}
             </td>
@@ -167,10 +198,12 @@
       <ng-container *ngFor="let key of kidneyFunctionExamination">
         <tr *ngIf="hasValue(key)">
           <td>{{ titleMapping[key] ?? "" }}</td>
-          <ng-container *ngFor="let item of data()">
+          <ng-container *ngFor="let item of data(); index as $index">
             <td
               [style.color]="checkResult(item[key]?.resultNote)"
               class="text-center"
+              [style.backgroundColor]="showIconState[$index] ? '' : hiddenGray"
+              [style.opacity]="showIconState[$index] ? '' : hiddenOpacity"
             >
               {{ item[key]?.value }}
             </td>
@@ -190,10 +223,12 @@
       <ng-container *ngFor="let key of generalUrineExamination">
         <tr *ngIf="hasValue(key)">
           <td>{{ titleMapping[key] ?? "" }}</td>
-          <ng-container *ngFor="let item of data()">
+          <ng-container *ngFor="let item of data(); index as $index">
             <td
               [style.color]="checkResult(item[key]?.resultNote)"
               class="text-center"
+              [style.backgroundColor]="showIconState[$index] ? '' : hiddenGray"
+              [style.opacity]="showIconState[$index] ? '' : hiddenOpacity"
             >
               {{ item[key]?.value }}
             </td>
@@ -213,10 +248,12 @@
       <ng-container *ngFor="let key of urineSedimentExamination">
         <tr *ngIf="hasValue(key)">
           <td>{{ titleMapping[key] ?? "" }}</td>
-          <ng-container *ngFor="let item of data()">
+          <ng-container *ngFor="let item of data(); index as $index">
             <td
               [style.color]="checkResult(item[key]?.resultNote)"
               class="text-center"
+              [style.backgroundColor]="showIconState[$index] ? '' : hiddenGray"
+              [style.opacity]="showIconState[$index] ? '' : hiddenOpacity"
             >
               {{ item[key]?.value }}
             </td>
@@ -236,10 +273,12 @@
       <ng-container *ngFor="let key of liverDiseaseExamination">
         <tr *ngIf="hasValue(key)">
           <td>{{ titleMapping[key] ?? "" }}</td>
-          <ng-container *ngFor="let item of data()">
+          <ng-container *ngFor="let item of data(); index as $index">
             <td
               [style.color]="checkResult(item[key]?.resultNote)"
               class="text-center"
+              [style.backgroundColor]="showIconState[$index] ? '' : hiddenGray"
+              [style.opacity]="showIconState[$index] ? '' : hiddenOpacity"
             >
               {{ item[key]?.value }}
             </td>
@@ -260,10 +299,12 @@
       <ng-container *ngFor="let key of sexDiseaseExamination">
         <tr *ngIf="hasValue(key)">
           <td>{{ titleMapping[key] ?? "" }}</td>
-          <ng-container *ngFor="let item of data()">
+          <ng-container *ngFor="let item of data(); index as $index">
             <td
               [style.color]="checkResult(item[key]?.resultNote)"
               class="text-center"
+              [style.backgroundColor]="showIconState[$index] ? '' : hiddenGray"
+              [style.opacity]="showIconState[$index] ? '' : hiddenOpacity"
             >
               {{ item[key]?.value }}
             </td>
@@ -284,10 +325,12 @@
       <ng-container *ngFor="let key of coagulationFunctionExamination">
         <tr *ngIf="hasValue(key)">
           <td>{{ titleMapping[key] ?? "" }}</td>
-          <ng-container *ngFor="let item of data()">
+          <ng-container *ngFor="let item of data(); index as $index">
             <td
               [style.color]="checkResult(item[key]?.resultNote)"
               class="text-center"
+              [style.backgroundColor]="showIconState[$index] ? '' : hiddenGray"
+              [style.opacity]="showIconState[$index] ? '' : hiddenOpacity"
             >
               {{ item[key]?.value }}
             </td>
@@ -305,7 +348,9 @@
       <thead class="text-xs">
         <tr>
           <th class="">檢驗項目</th>
-          <th *ngFor="let item of data()">{{ getFormatDate(item.date) }}</th>
+          <th *ngFor="let item of dataForPdf()">
+            {{ getFormatDate(item.date) }}
+          </th>
           <th class="text-end">參考值說明</th>
           <th class="text-end">單位</th>
         </tr>
@@ -314,7 +359,7 @@
         @if(checkCategoryTitle(bloodRoutineExamination)){
         <tr class="font-bold bg-slate-200">
           <td>血液常規檢查</td>
-          <td *ngFor="let item of data()"></td>
+          <td *ngFor="let item of dataForPdf()"></td>
           <td></td>
           <td></td>
         </tr>
@@ -322,10 +367,11 @@
         <ng-container *ngFor="let key of bloodRoutineExamination">
           <tr *ngIf="hasValue(key)">
             <td>{{ titleMapping[key] ?? "" }}</td>
-            <ng-container *ngFor="let item of data()">
+            <ng-container *ngFor="let item of dataForPdf(); index as $index">
               <td
                 [style.color]="checkResult(item[key]?.resultNote)"
                 class="text-center"
+
               >
                 {{ item[key]?.value }}
               </td>
@@ -337,7 +383,7 @@
         @if(checkCategoryTitle(whiteBloodCellDifferentiation)){
         <tr class="font-bold bg-slate-200">
           <td>白血球分離</td>
-          <td *ngFor="let item of data()"></td>
+          <td *ngFor="let item of dataForPdf()"></td>
           <td></td>
           <td></td>
         </tr>
@@ -345,10 +391,12 @@
         <ng-container *ngFor="let key of whiteBloodCellDifferentiation">
           <tr *ngIf="hasValue(key)">
             <td>{{ titleMapping[key] ?? "" }}</td>
-            <ng-container *ngFor="let item of data()">
+            <ng-container *ngFor="let item of dataForPdf(); index as $index">
               <td
                 [style.color]="checkResult(item[key]?.resultNote)"
                 class="text-center"
+
+
               >
                 {{ item[key]?.value }}
               </td>
@@ -360,7 +408,7 @@
         @if(checkCategoryTitle(bloodSugarExamination)){
         <tr class="font-bold bg-slate-200">
           <td>糖尿病檢查</td>
-          <td *ngFor="let item of data()"></td>
+          <td *ngFor="let item of dataForPdf()"></td>
           <td></td>
           <td></td>
         </tr>
@@ -368,10 +416,12 @@
         <ng-container *ngFor="let key of bloodSugarExamination">
           <tr *ngIf="hasValue(key)">
             <td>{{ titleMapping[key] ?? "" }}</td>
-            <ng-container *ngFor="let item of data()">
+            <ng-container *ngFor="let item of dataForPdf(); index as $index">
               <td
                 [style.color]="checkResult(item[key]?.resultNote)"
                 class="text-center"
+
+
               >
                 {{ item[key]?.value }}
               </td>
@@ -383,7 +433,7 @@
         @if(checkCategoryTitle(liverFunctionExamination)){
         <tr class="font-bold bg-slate-200">
           <td>肝膽功能檢查</td>
-          <td *ngFor="let item of data()"></td>
+          <td *ngFor="let item of dataForPdf()"></td>
           <td></td>
           <td></td>
         </tr>
@@ -391,10 +441,12 @@
         <ng-container *ngFor="let key of liverFunctionExamination">
           <tr *ngIf="hasValue(key)">
             <td>{{ titleMapping[key] ?? "" }}</td>
-            <ng-container *ngFor="let item of data()">
+            <ng-container *ngFor="let item of dataForPdf(); index as $index">
               <td
                 [style.color]="checkResult(item[key]?.resultNote)"
                 class="text-center"
+
+
               >
                 {{ item[key]?.value }}
               </td>
@@ -406,7 +458,7 @@
         @if(checkCategoryTitle(bloodLipidExamination)){
         <tr class="font-bold bg-slate-200">
           <td>血脂肪檢查</td>
-          <td *ngFor="let item of data()"></td>
+          <td *ngFor="let item of dataForPdf()"></td>
           <td></td>
           <td></td>
         </tr>
@@ -414,11 +466,13 @@
         <ng-container *ngFor="let key of bloodLipidExamination">
           <tr *ngIf="hasValue(key)">
             <td>{{ titleMapping[key] ?? "" }}</td>
-            <ng-container *ngFor="let item of data()">
+            <ng-container *ngFor="let item of dataForPdf(); index as $index">
               <td
                 [style.color]="checkResult(item[key]?.resultNote)"
                 class="text-center"
-                [style.backgroundColor]="isHighLightRow()"
+                [ngClass]="{ 'highlight': isHighLightRow() }"
+
+
               >
                 {{ item[key]?.value }}
               </td>
@@ -430,7 +484,7 @@
         @if(checkCategoryTitle(kidneyFunctionExamination)){
         <tr class="font-bold bg-slate-200">
           <td>腎功能檢查</td>
-          <td *ngFor="let item of data()"></td>
+          <td *ngFor="let item of dataForPdf()"></td>
           <td></td>
           <td></td>
         </tr>
@@ -438,10 +492,11 @@
         <ng-container *ngFor="let key of kidneyFunctionExamination">
           <tr *ngIf="hasValue(key)">
             <td>{{ titleMapping[key] ?? "" }}</td>
-            <ng-container *ngFor="let item of data()">
+            <ng-container *ngFor="let item of dataForPdf(); index as $index">
               <td
                 [style.color]="checkResult(item[key]?.resultNote)"
                 class="text-center"
+
               >
                 {{ item[key]?.value }}
               </td>
@@ -453,7 +508,7 @@
         @if(checkCategoryTitle(generalUrineExamination)){
         <tr class="font-bold bg-slate-200">
           <td>一般尿液檢查</td>
-          <td *ngFor="let item of data()"></td>
+          <td *ngFor="let item of dataForPdf()"></td>
           <td></td>
           <td></td>
         </tr>
@@ -461,7 +516,7 @@
         <ng-container *ngFor="let key of generalUrineExamination">
           <tr *ngIf="hasValue(key)">
             <td>{{ titleMapping[key] ?? "" }}</td>
-            <ng-container *ngFor="let item of data()">
+            <ng-container *ngFor="let item of dataForPdf()">
               <td
                 [style.color]="checkResult(item[key]?.resultNote)"
                 class="text-center"
@@ -476,7 +531,7 @@
         @if(checkCategoryTitle(urineSedimentExamination)){
         <tr class="font-bold bg-slate-200">
           <td>尿液沈渣浸檢</td>
-          <td *ngFor="let item of data()"></td>
+          <td *ngFor="let item of dataForPdf()"></td>
           <td></td>
           <td></td>
         </tr>
@@ -484,10 +539,11 @@
         <ng-container *ngFor="let key of urineSedimentExamination">
           <tr *ngIf="hasValue(key)">
             <td>{{ titleMapping[key] ?? "" }}</td>
-            <ng-container *ngFor="let item of data()">
+            <ng-container *ngFor="let item of dataForPdf(); index as $index">
               <td
                 [style.color]="checkResult(item[key]?.resultNote)"
                 class="text-center"
+
               >
                 {{ item[key]?.value }}
               </td>
@@ -499,7 +555,7 @@
         @if(checkCategoryTitle(liverDiseaseExamination)){
         <tr class="font-bold bg-slate-200">
           <td>病毒肝炎檢查</td>
-          <td *ngFor="let item of data()"></td>
+          <td *ngFor="let item of dataForPdf()"></td>
           <td></td>
           <td></td>
         </tr>
@@ -507,10 +563,11 @@
         <ng-container *ngFor="let key of liverDiseaseExamination">
           <tr *ngIf="hasValue(key)">
             <td>{{ titleMapping[key] ?? "" }}</td>
-            <ng-container *ngFor="let item of data()">
+            <ng-container *ngFor="let item of dataForPdf(); index as $index">
               <td
                 [style.color]="checkResult(item[key]?.resultNote)"
                 class="text-center"
+
               >
                 {{ item[key]?.value }}
               </td>
@@ -523,7 +580,7 @@
         @if(checkCategoryTitle(sexDiseaseExamination)){
         <tr class="font-bold bg-slate-200">
           <td>性病檢查</td>
-          <td *ngFor="let item of data()"></td>
+          <td *ngFor="let item of dataForPdf()"></td>
           <td></td>
           <td></td>
         </tr>
@@ -531,10 +588,11 @@
         <ng-container *ngFor="let key of sexDiseaseExamination">
           <tr *ngIf="hasValue(key)">
             <td>{{ titleMapping[key] ?? "" }}</td>
-            <ng-container *ngFor="let item of data()">
+            <ng-container *ngFor="let item of dataForPdf() ; index as $index">
               <td
                 [style.color]="checkResult(item[key]?.resultNote)"
                 class="text-center"
+
               >
                 {{ item[key]?.value }}
               </td>
@@ -547,7 +605,7 @@
         @if(checkCategoryTitle(coagulationFunctionExamination)){
         <tr class="font-bold bg-slate-200">
           <td>血液凝固檢查</td>
-          <td *ngFor="let item of data()"></td>
+          <td *ngFor="let item of dataForPdf()"></td>
           <td></td>
           <td></td>
         </tr>
@@ -555,10 +613,11 @@
         <ng-container *ngFor="let key of coagulationFunctionExamination">
           <tr *ngIf="hasValue(key)">
             <td>{{ titleMapping[key] ?? "" }}</td>
-            <ng-container *ngFor="let item of data()">
+            <ng-container *ngFor="let item of dataForPdf(); index as $index">
               <td
                 [style.color]="checkResult(item[key]?.resultNote)"
                 class="text-center"
+
               >
                 {{ item[key]?.value }}
               </td>
