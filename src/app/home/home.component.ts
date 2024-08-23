@@ -104,7 +104,6 @@ export class HomeComponent implements OnInit {
         return person.name === name
       })
       const resData = this.sortByDateAndId(filterDate)
-      this.dataCache = resData
       this.dataForPdf.set(resData)
       this.data.set(resData);
     }
@@ -112,11 +111,19 @@ export class HomeComponent implements OnInit {
 
 
   handleSwap($event:any){
-    const temp = this.dataCache[$event]
-    this.dataCache[$event] = this.dataCache[$event-1]
-    this.dataCache[$event-1] = temp
+    let dataCache = [...this.data()]
+    let dataPdfCache = [...this.dataForPdf()]
+    const temp = dataCache[$event]
+    dataCache[$event] = dataCache[$event-1]
+    dataCache[$event-1] = temp
     this.data.set([]);
-    this.data.set(this.dataCache);
+    this.data.set(dataCache);
+    const dataPdfCacheAfterHide = dataCache.filter((person:any)=>{
+      return dataPdfCache.some((item:any)=>{
+        return item.date === person.date && item.id === person.id
+      })
+    })
+    this.dataForPdf.set(dataPdfCacheAfterHide);
   }
 
   filterData(data: any, name: string) {
