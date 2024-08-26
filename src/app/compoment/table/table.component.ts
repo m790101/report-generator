@@ -33,11 +33,12 @@ import autoTable from 'jspdf-autotable'
 import '../../../assets/font/NotoSansTC-Regular-normal'
 import { IconVisibleComponent } from '../icon-visible/icon-visible.component';
 import { IconInvisibleComponent } from '../icon-invisible/icon-invisible.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-table',
   standalone: true,
-  imports: [CommonModule, IconDownloadComponent,IconVisibleComponent,IconInvisibleComponent],
+  imports: [CommonModule, IconDownloadComponent,IconVisibleComponent,IconInvisibleComponent,FormsModule],
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -56,7 +57,7 @@ export class TableComponent implements OnInit {
   @Output()
   showEvent= new EventEmitter();
 
-
+  note = '';
 
   isHighLight = false;
   highlightYellow = '#fff299'
@@ -65,6 +66,7 @@ export class TableComponent implements OnInit {
   positiveResult = ['N', 'L'];
   showIconState:boolean[] = []
   hideItemSet = new Set();
+  isShowEditMap = new Map();
 
   bloodRoutineExamination = bloodRoutineExamination as (keyof DataItem)[];
   whiteBloodCellDifferentiation =
@@ -275,6 +277,21 @@ export class TableComponent implements OnInit {
     doc.save('table.pdf');
   }
 
+  openNote(i:number){
+    console.log(i)
+    this.isShowEditMap.set(i,true)
+  }
+  closeNote(i:number){
+    console.log(i)
+
+    this.isShowEditMap.set(i,false)
+  }
+
+  checkIfShowEdit(i:number){
+    return this.isShowEditMap.get(i)
+  }
+
+
   checkCategoryTitle(categoryArray: string[]): boolean {
     let exist = false
      categoryArray.forEach((key) => {
@@ -296,7 +313,6 @@ export class TableComponent implements OnInit {
   hide(item:any) {
     this.hideItemSet.add(item);
     this.showIconState[this.data().indexOf(item)] = false
-    console.log()
     this.hideEmit.emit(item);
   }
 

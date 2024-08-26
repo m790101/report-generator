@@ -4,6 +4,7 @@ const defaultData2: any = {
   id: 1,
   name: '',
   date: '',
+  note:'',
   WBC: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 1 },
   RBC: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 2 },
   HgB: { title: '', value: '', units: '', resultNote: '', criteria: '', index: 3 },
