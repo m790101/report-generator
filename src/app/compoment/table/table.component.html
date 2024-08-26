@@ -28,8 +28,27 @@
     <thead class="text-xl">
       <tr>
         <th class="align-bottom">檢驗項目</th>
-        <th *ngFor="let item of data(); index as i" class="align-bottom">
-          <div class="d-flex flex-column justify-end">
+        <th *ngFor="let item of data(); index as i" class="align-bottom relative">
+          <section class="flex mb-5 justify-center">
+            <div class="flex justify-center">
+              <button (click)="openNote(i)" *ngIf="!checkIfShowEdit(i)" >
+                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                   <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
+                 </svg>
+               </button>
+            </div>
+            <div class="flex justify-center gap-2 absolute top-0" *ngIf="checkIfShowEdit(i)">
+              <div>
+                <input class="input-edit" [id]="i" type="text" name="note" [(ngModel)]="item.note">
+              </div>
+              <button (click)="closeNote(i)">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                </svg>
+              </button>
+            </div>
+          </section>
+          <div class="">
             <div class="flex justify-center">
               @if(showIconState[i]){
               <button class="btn mb-5 font-light" (click)="hide(item)">
@@ -41,7 +60,8 @@
               </button>
               }
             </div>
-            <button
+            <div class="flex justify-center mb-8">
+              <button
               class="btn mb-5 font-light text-sm  flex justify-center gap-2 items-center"
               [style.opacity]="i !== 0 ? 1 : 0"
               (click)="swap(i)"
@@ -51,7 +71,16 @@
             </svg>
             <span>(向前)</span>
             </button>
-            <div>
+            </div>
+
+            <div class="absolute bottom-10">
+              @if(!checkIfShowEdit(i)){
+                <span class="text-base" >
+                  {{item.note}}
+                </span>
+              }
+            </div>
+            <div class="text-center">
               {{ getFormatDate(item.date) }}
             </div>
           </div>
@@ -345,11 +374,15 @@
 
   <main #pdfTable>
     <table class="mb-9 hidden" id="pdfTable">
-      <thead class="text-xs">
+      <thead class="text-xs ">
         <tr>
           <th class="">檢驗項目</th>
           <th *ngFor="let item of dataForPdf()">
-            {{ getFormatDate(item.date) }}
+              <p class="mt-11 ">
+                {{item.note}}
+                <br/>
+                {{ getFormatDate(item.date) }}
+              </p>
           </th>
           <th class="text-end">參考值說明</th>
           <th class="text-end">單位</th>
