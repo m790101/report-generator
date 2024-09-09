@@ -1,1 +1,86 @@
-<p>booking works!</p>
+<main class="flex justify-center ">
+  <div class=" p-6">
+    <div class="mt-5 text-xl">
+      <p>今天日期：2024年9月9日</p>
+    </div>
+    <section class="mt-5">
+      <form [formGroup]="bookingForm" class="form">
+        <div class="flex items-center">
+          <label class="">查詢日期：</label>
+          <div class="relative">
+            <input matInput
+            [placeholder]="'請輸入日期'"
+            [matDatepicker]="datepicker"
+            (click)="datepicker.open()"
+            formControlName="date"
+            autocomplete="off"
+            class="date-picker-input"
+            >
+            <mat-datepicker #datepicker startView="month" [startAt]="startDate"></mat-datepicker>
+            <div
+                *ngIf="
+                  bookingForm.get('date')?.invalid &&
+                  bookingForm.get('date')?.touched &&
+                  bookingForm.get('date')?.hasError('required')
+                "
+                class="ml-3  absolute"
+              >
+                <span class="error-msg text-red-500 text-s">請選擇日期</span>
+              </div>
+            </div>
+          <button class="ml-10 btn" (click)="search()" >search</button>
+        </div>
+      </form>
+
+    </section>
+    <section class="flex gap-8 mt-10">
+      <div>
+        <div class="p-6"></div>
+        <div>
+          <ul>
+            @for (timeSlot of timeSlots; track $index) {
+            <li class="booking-block">
+              <div>
+                {{ timeSlot }}
+              </div>
+            </li>
+            }
+          </ul>
+        </div>
+      </div>
+      @for (room of rooms; track $index) {
+      <div>
+        <div class="px-6 py-2">
+          <p>{{ room }}</p>
+        </div>
+        <div>
+          <ul>
+            @for (timeSlot of timeSlots; track $index) {
+            <li class="booking-block text-s hover:bg-sky-300 cursor-pointer">
+              <div class="">
+                @if(checkBooking(room,timeSlot)){
+                  <div>
+                    eecp
+                  </div>
+                  <div>
+                    Mr 0
+                  </div>
+                  <div>
+                    wendy
+                  </div>
+                }
+                @else{
+                  <div class="">
+
+                  </div>
+                }
+              </div>
+            </li>
+            }
+          </ul>
+        </div>
+      </div>
+      }
+    </section>
+  </div>
+</main>

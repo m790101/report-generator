@@ -16,4 +16,8 @@ constructor( private router: Router,) { }
     this.router.navigate(['/report']);
   }
 
+  goToBooking() {
+    this.router.navigate(['/booking']);
+  }
+
 }
