@@ -1,0 +1,22 @@
+<app-modal [title]="title"  [outsideClose]="true" (cancelEvent)="ok()">
+  <div class="modal-body">
+    <div class="mb-4">
+      <ul>
+       <li>room: <span>{{detailData.room}}</span></li>
+       <li>time: <span>{{detailData.time}}</span></li>
+       <li>name: <span>{{detailData.name}}</span></li>
+      </ul>
+    </div>
+   <div>耗材</div>
+   <ul>
+    <li>eecp</li>
+    <li>other stuff</li>
+   </ul>
+  </div>
+
+  <div class="modal-footer p-0 border-0 max-w d-sm-flex">
+    <button type="button" class="btn custom-btn btn-red" (click)="ok()">
+      {{ buttonText }}
+    </button>
+  </div>
+</app-modal>

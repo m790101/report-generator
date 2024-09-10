@@ -1,7 +1,11 @@
 <main class="flex justify-center ">
   <div class=" p-6">
+    <div class="mt-5 text-xl text-center">
+      <p>來喔訂病房賺錢囉</p>
+    </div>
     <div class="mt-5 text-xl">
-      <p>今天日期：2024年9月9日</p>
+      <p>今天日期：{{today}} </p>
+      <!-- <button (click)="showModal()">modal</button> -->
     </div>
     <section class="mt-5">
       <form [formGroup]="bookingForm" class="form">
@@ -33,6 +37,20 @@
       </form>
 
     </section>
+    <section class="mt-10">
+      <div>
+        <p>器材即時狀況：</p>
+      </div>
+      <div>
+        <div class="flex gap-4">
+          @for (equipment of equipments; track $index) {
+            <div>
+              {{equipment}} * 2
+            </div>
+          }
+        </div>
+      </div>
+    </section>
     <section class="flex gap-8 mt-10">
       <div>
         <div class="p-6"></div>
@@ -56,7 +74,7 @@
         <div>
           <ul>
             @for (timeSlot of timeSlots; track $index) {
-            <li class="booking-block text-s hover:bg-sky-300 cursor-pointer">
+            <li class="booking-block text-s hover:bg-sky-300 cursor-pointer" (click)="showDetail(room,timeSlot)">
               <div class="">
                 @if(checkBooking(room,timeSlot)){
                   <div>
@@ -70,8 +88,8 @@
                   </div>
                 }
                 @else{
-                  <div class="">
-
+                  <div class="" >
+                      1
                   </div>
                 }
               </div>
