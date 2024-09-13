@@ -1,7 +1,7 @@
 <main class="flex justify-center ">
   <div class=" p-6">
     <div class="mt-5 text-xl text-center">
-      <p>來喔訂病房賺錢囉</p>
+      <p>來喔訂病房囉</p>
     </div>
     <div class="mt-5 text-xl">
       <p>今天日期：{{today}} </p>
@@ -74,22 +74,20 @@
         <div>
           <ul>
             @for (timeSlot of timeSlots; track $index) {
-            <li class="booking-block text-s hover:bg-sky-300 cursor-pointer" (click)="showDetail(room,timeSlot)">
+            <li class="booking-block text-s  cursor-pointer" (click)="checkToShowModal(room,timeSlot)"
+            [ngClass]="{ 'hover:bg-sky-300': !checkBooking(room,timeSlot),'bg-green-300': checkBooking(room,timeSlot) }"
+            >
               <div class="">
                 @if(checkBooking(room,timeSlot)){
-                  <div>
-                    eecp
+                  <div class="font-medium">
+                    {{ bookingDetailMap.get(room).treatment}}
                   </div>
                   <div>
-                    Mr 0
-                  </div>
-                  <div>
-                    wendy
+                    {{ bookingDetailMap.get(room).name}}
                   </div>
                 }
                 @else{
-                  <div class="" >
-                      1
+                  <div class="">
                   </div>
                 }
               </div>

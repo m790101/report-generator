@@ -17,6 +17,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { DetailModalComponent } from './detail-modal/detail-modal.component';
 import moment from 'moment';
+import { AddBookingModalComponent } from './add-booking-modal/add-booking-modal.component';
 
 /**
  * @description 設定 TW 日期區間選擇器格式
@@ -64,23 +65,26 @@ export class BookingComponent {
       date: '2021-09-09',
       room: '201',
       time: '9:30',
+      treatment: 'olib',
       name: 'John Doe',
     },
     {
       date: '2021-09-09',
       room: '203',
       time: '13:30',
+      treatment: 'eecp',
       name: 'John Doe3',
     },
     {
       date: '2021-09-09',
       room: '203',
       time: '9:30',
+      treatment: 'eecp',
       name: 'John Doe2',
     },
   ];
   bookingMap = new Map();
-
+  bookingDetailMap = new Map();
   constructor(private fb: FormBuilder, public dialog: MatDialog) {}
 
   initForm() {
@@ -113,6 +117,7 @@ export class BookingComponent {
     this.fakeData.forEach((item) => {
       const timeList = this.bookingMap.get(item.room);
       const list = [...timeList, item.time];
+      this.bookingDetailMap.set(item.room, item);
       this.bookingMap.set(item.room, list);
     });
   }
@@ -140,6 +145,23 @@ export class BookingComponent {
       this.dialog.open(DetailModalComponent, {
         data: booking,
       });
+    }
+  }
+  showAddModal(room: string, timeSlot: string) {
+    const data = {
+      room,
+      time: timeSlot,
+    };
+    this.dialog.open(AddBookingModalComponent, {
+      data,
+    });
+  }
+
+  checkToShowModal(room: string, timeSlot: string):void {
+    if(this.checkBooking(room, timeSlot)){
+      this.showDetail(room, timeSlot);
+    } else {
+      this.showAddModal(room, timeSlot);
     }
   }
 }
