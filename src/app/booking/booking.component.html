@@ -1,0 +1,91 @@
+<main class="flex justify-center ">
+  <div class=" p-6">
+    <div class="mt-5 text-xl text-center">
+      <p>來喔訂病房囉</p>
+    </div>
+    <div class="mt-5 text-xl">
+      <p>表單日期：{{bookingDate}} </p>
+    </div>
+    <section class="mt-5">
+      <form [formGroup]="bookingForm" class="form">
+        <div class="flex items-center">
+          <label class="">查詢日期：</label>
+          <div class="relative">
+            <input matInput
+            [placeholder]="'請輸入日期'"
+            [matDatepicker]="datepicker"
+            (click)="datepicker.open()"
+            formControlName="date"
+            autocomplete="off"
+            class="date-picker-input"
+            >
+            <mat-datepicker #datepicker startView="month" [startAt]="startDate"></mat-datepicker>
+            <div
+                *ngIf="
+                  bookingForm.get('date')?.invalid &&
+                  bookingForm.get('date')?.touched &&
+                  bookingForm.get('date')?.hasError('required')
+                "
+                class="ml-3  absolute"
+              >
+                <span class="error-msg text-red-500 text-s">請選擇日期</span>
+              </div>
+            </div>
+          <button class="ml-10 btn" (click)="search()" >search</button>
+        </div>
+      </form>
+
+    </section>
+    <section class="flex gap-8 mt-10">
+      <div>
+        <div class="p-6"></div>
+        <div>
+          <ul>
+            @for (timeSlot of timeSlots; track $index) {
+            <li class="booking-block items-center">
+              <div>
+                {{ timeSlot }}
+              </div>
+            </li>
+            }
+          </ul>
+        </div>
+      </div>
+      <div  *ngFor="let room of rooms;$index">
+        <div class="px-6 py-1 text-center text-lg">
+          <p>{{ room }}</p>
+        </div>
+        <div>
+          <ul>
+            <li
+            *ngFor="let timeSlot of timeSlots;$index"
+            class="booking-block pt-2 text-s  cursor-pointer" (click)="checkToShowModal(room,timeSlot)"
+            [ngClass]="{ 'hover:bg-sky-300': !checkBooking(room,timeSlot),'bg-green-300': checkBooking(room,timeSlot) }"
+            >
+              <div class="" *ngIf="checkBooking(room,timeSlot)">
+                  <div class="font-medium text-lg" >
+                    {{ bookingDetailMap.get(room).treatment}}
+                  </div>
+                  <div class="text-base">
+                    {{ bookingDetailMap.get(room).name}}
+                  </div>
+                  <hr class="h-0.5 mb-2 border-t-0  bg-black" />
+                  <div>
+                    <ul>
+                      @for (equipment of bookingDetailMap.get(room).equipment; track $index) {
+                        <li>
+                          {{ equipment}}
+                        </li>
+                      }
+                    </ul>
+                  </div>
+              </div>
+               <div class="" *ngIf="!checkBooking(room,timeSlot)">
+                  </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>

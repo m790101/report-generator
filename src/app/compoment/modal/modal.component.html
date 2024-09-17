@@ -1,0 +1,19 @@
+<div class="custom-modal">
+  <div
+    class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+    [ngClass]="{ 'modal-lg-thin': hasLargeType }"
+  >
+    <div class="modal-content border-0 position-relative">
+      <!-- title 及 Ｘ 關閉按鈕 -->
+      <div class="modal-header border-0">
+        <p class="modal-title text-xl text-center">{{ title }}</p>
+      </div>
+
+      <!-- 自定義箝入內容-->
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>
+<!-- Modal 外背景及是否可點擊框外背景關閉 -->
+<div class="modal-background" (click)="clickOutsideClose()"></div>
+
