@@ -33,7 +33,7 @@ export class DetailModalComponent {
     }
   }
   ok(): void {
-    this.doConfirm.emit();
+    // this.doConfirm.emit();
     this.dialogRef.close();
   }
 

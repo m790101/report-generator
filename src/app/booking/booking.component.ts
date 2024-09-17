@@ -1,5 +1,11 @@
+import { BookingService } from './booking.service';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -18,6 +24,8 @@ import { MatInputModule } from '@angular/material/input';
 import { DetailModalComponent } from './detail-modal/detail-modal.component';
 import moment from 'moment';
 import { AddBookingModalComponent } from './add-booking-modal/add-booking-modal.component';
+import { Subject, takeUntil } from 'rxjs';
+import { Room } from './model/getRoom.model';
 
 /**
  * @description 設定 TW 日期區間選擇器格式
@@ -52,57 +60,71 @@ export const TW_FORMATS = {
   ],
   styleUrl: './booking.component.scss',
 })
-export class BookingComponent {
+export class BookingComponent implements OnInit {
   bookingForm!: FormGroup;
   readonly startDate = new Date();
   today = moment().format('YYYY-MM-DD');
+  bookingDate = moment().format('YYYY-MM-DD');
   rooms = ['201', '202', '203', '205', '206', '207', '208', '209', '999'];
-  timeSlots = ['9:30', '11:00', '12:00', '13:30', '15:00', '16:30'];
-  equipments = ['eecp', '氫氧', 'olib', 'dfpp', '點滴架'];
+  timeSlots = ['09:30', '11:00', '12:00', '13:30', '15:00', '16:30'];
+  equipments:any = []
 
-  fakeData = [
-    {
-      date: '2021-09-09',
-      room: '201',
-      time: '9:30',
-      treatment: 'olib',
-      name: 'John Doe',
-    },
-    {
-      date: '2021-09-09',
-      room: '203',
-      time: '13:30',
-      treatment: 'eecp',
-      name: 'John Doe3',
-    },
-    {
-      date: '2021-09-09',
-      room: '203',
-      time: '9:30',
-      treatment: 'eecp',
-      name: 'John Doe2',
-    },
-  ];
+  equipmentMap = new Map();
+  reservations: any = [];
+  treatments: any = [];
+  private readonly destroy$ = new Subject();
   bookingMap = new Map();
   bookingDetailMap = new Map();
-  constructor(private fb: FormBuilder, public dialog: MatDialog) {}
+  constructor(
+    private fb: FormBuilder,
+    public dialog: MatDialog,
+    private bookingService: BookingService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   initForm() {
     this.bookingForm = this.fb.group({
       date: new FormControl('', [Validators.required]),
     });
   }
+
+  initEquipmentMap() {
+    this.timeSlots.forEach((time: string) => {
+      const equipNumMap = new Map()
+      this.equipments.forEach((equipment:any)=>{
+        equipNumMap.set(equipment.name,equipment.num)
+      })
+
+      this.equipmentMap.set(time, equipNumMap);
+    });
+
+  }
+
   ngOnInit() {
     this.initForm();
     this.initBookingMap();
     //api call
-    this.getBooking();
+    this.getTreatment();
+    this.getEquipment()
+    this.getBooking(this.bookingDate);
     this.scrollToTop();
+  }
+
+  getEquipment(){
+    this.bookingService
+      .getEquipment()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        console.log(res)
+        this.equipments = res.equipmentList;
+      });
   }
 
   initBookingMap() {
     this.rooms.forEach((room) => {
-      this.bookingMap.set(room, []);
+      if (room) {
+        this.bookingMap.set(room, []);
+      }
     });
   }
 
@@ -112,21 +134,70 @@ export class BookingComponent {
     }, 300);
   }
 
-  getBooking() {
-    // for now fake data
-    this.fakeData.forEach((item) => {
-      const timeList = this.bookingMap.get(item.room);
-      const list = [...timeList, item.time];
-      this.bookingDetailMap.set(item.room, item);
-      this.bookingMap.set(item.room, list);
-    });
+  getBooking(bookingDate: string) {
+    this.bookingService
+      .getBooking(bookingDate)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.reservations = res;
+        this.initEquipmentMap()
+        res.forEach((item: any) => {
+          this.setTimeSlot(item.room, item.timeSlot, item);
+          this.setEquipment(item.timeSlot,item.equipment)
+        });
+        this.cdr.detectChanges();
+      });
+  }
+
+  resetEquipNumInTimeSlot(timeSlot:string,equipments:any){
+      equipments.forEach((item:any)=>{
+          this.equipmentMap.get(timeSlot).set(item.name,item.num)
+      })
+  }
+
+  setEquipment(timeSlot:string,equipment:string){
+      const timeSlotEquipment = this.equipmentMap.get(timeSlot)
+      const equipmentList = JSON.parse(equipment)
+      equipmentList.forEach((item:string)=>{
+          if(timeSlotEquipment.has(item)){
+            const numAfter = timeSlotEquipment.get(item) - 1
+            timeSlotEquipment.set(item,numAfter)
+          }
+      })
+  }
+
+  setTimeSlot(room: string, timeSlot: string, detail: any) {
+    const timeList = this.bookingMap.get(room);
+    const list = [...timeList, timeSlot];
+    const detailWithEquipAray = {
+      ...detail,
+      equipment:JSON.parse(detail.equipment)
+    }
+    this.bookingDetailMap.set(room, detailWithEquipAray);
+    this.bookingMap.set(room, list);
+  }
+
+  getTreatment() {
+    this.bookingService
+      .getTreatment()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.treatments = res;
+      });
   }
 
   search() {
     if (this.bookingForm.invalid) {
       this.bookingForm.markAllAsTouched();
+      return;
     }
-    console.log(this.bookingForm.value);
+    const selectedDate = moment(this.bookingForm.value.date).format(
+      'YYYY-MM-DD'
+    );
+    this.bookingDate = selectedDate;
+    this.initBookingMap();
+    this.getBooking(this.bookingDate);
+
   }
 
   checkBooking(room: string, timeSlot: string): boolean {
@@ -138,27 +209,55 @@ export class BookingComponent {
   }
 
   showDetail(room: string, timeSlot: string) {
-    const booking = this.fakeData.find(
-      (item) => item.room === room && item.time === timeSlot
+    const booking = this.reservations.find(
+      (item: any) => item.room === room && item.timeSlot === timeSlot
     );
     if (booking) {
+      const bookingDetail = {
+       ...booking,
+       equipment: JSON.parse(booking.equipment)
+      }
       this.dialog.open(DetailModalComponent, {
-        data: booking,
+        data: bookingDetail,
       });
     }
   }
   showAddModal(room: string, timeSlot: string) {
     const data = {
+      date: this.bookingDate,
       room,
       time: timeSlot,
+      ...this.treatments,
+      equipment:this.equipmentMap.get(timeSlot)
     };
-    this.dialog.open(AddBookingModalComponent, {
+    const dialogRef = this.dialog.open(AddBookingModalComponent, {
       data,
     });
+
+    dialogRef.componentInstance.doConfirm.subscribe((payload) => {
+      console.log(payload);
+      const req = {
+        ...payload,
+        equipment:JSON.stringify(payload.equipment)
+      }
+      this.addReservation(req);
+    });
+    return dialogRef;
   }
 
-  checkToShowModal(room: string, timeSlot: string):void {
-    if(this.checkBooking(room, timeSlot)){
+  addReservation(req: any) {
+    this.bookingService
+      .addReservation(req)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        console.log(res);
+        this.setTimeSlot(req.room, req.timeSlot, req);
+        this.getBooking(this.bookingDate);
+      });
+  }
+
+  checkToShowModal(room: string, timeSlot: string): void {
+    if (this.checkBooking(room, timeSlot)) {
       this.showDetail(room, timeSlot);
     } else {
       this.showAddModal(room, timeSlot);

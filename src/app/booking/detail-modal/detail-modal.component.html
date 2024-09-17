@@ -8,7 +8,7 @@
         </li>
         <li>
           <span class="font-medium">時間:</span>
-          <span class="ms-2">{{ detailData.time }}</span>
+          <span class="ms-2">{{ detailData.timeSlot }}</span>
         </li>
         <li>
           <span class="font-medium">客人姓名:</span>
@@ -18,9 +18,11 @@
     </div>
     <div class="font-medium">器材</div>
     <ul>
-      <li>eecp</li>
-      <li>other stuff</li>
+      @for( equip of detailData.equipment; track $index){
+        <li>{{equip}}</li>
+      }
     </ul>
+
   </div>
 
   <div class="modal-footer p-0 border-0 max-w flex justify-center">
