@@ -2,6 +2,7 @@ import { Component, EventEmitter, Inject, Output } from '@angular/core';
 import { ModalComponent } from "../../compoment/modal/modal.component";
 import { SafeHtml } from '@angular/platform-browser';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { ModalService } from '@src/services/modal.service';
 
 @Component({
   selector: 'app-detail-modal',
@@ -27,6 +28,7 @@ export class DetailModalComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: DetailModalComponent,
     public dialogRef: MatDialogRef<DetailModalComponent>,
+    private modelService: ModalService
   ) {
     if (data) {
       this.detailData = data;
@@ -36,6 +38,11 @@ export class DetailModalComponent {
     // this.doConfirm.emit();
     this.dialogRef.close();
   }
-
+  cancelReservation(){
+    // this.modelService.showInfoModal({})
+    const isCancel = true
+    this.doConfirm.emit(this.detailData);
+    this.dialogRef.close();
+  }
 
 }

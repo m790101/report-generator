@@ -67,7 +67,7 @@ export class BookingComponent implements OnInit {
   bookingDate = moment().format('YYYY-MM-DD');
   rooms = ['201', '202', '203', '205', '206', '207', '208', '209', '999'];
   timeSlots = ['09:30', '11:00', '12:00', '13:30', '15:00', '16:30'];
-  equipments:any = []
+  equipments: any = [];
 
   equipmentMap = new Map();
   reservations: any = [];
@@ -90,14 +90,13 @@ export class BookingComponent implements OnInit {
 
   initEquipmentMap() {
     this.timeSlots.forEach((time: string) => {
-      const equipNumMap = new Map()
-      this.equipments.forEach((equipment:any)=>{
-        equipNumMap.set(equipment.name,equipment.num)
-      })
+      const equipNumMap = new Map();
+      this.equipments.forEach((equipment: any) => {
+        equipNumMap.set(equipment.name, equipment.num);
+      });
 
       this.equipmentMap.set(time, equipNumMap);
     });
-
   }
 
   ngOnInit() {
@@ -105,17 +104,17 @@ export class BookingComponent implements OnInit {
     this.initBookingMap();
     //api call
     this.getTreatment();
-    this.getEquipment()
+    this.getEquipment();
     this.getBooking(this.bookingDate);
     this.scrollToTop();
   }
 
-  getEquipment(){
+  getEquipment() {
     this.bookingService
       .getEquipment()
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        console.log(res)
+        console.log(res);
         this.equipments = res.equipmentList;
       });
   }
@@ -140,30 +139,30 @@ export class BookingComponent implements OnInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.reservations = res;
-        this.initEquipmentMap()
+        this.initEquipmentMap();
         res.forEach((item: any) => {
           this.setTimeSlot(item.room, item.timeSlot, item);
-          this.setEquipment(item.timeSlot,item.equipment)
+          this.setEquipment(item.timeSlot, item.equipment);
         });
         this.cdr.detectChanges();
       });
   }
 
-  resetEquipNumInTimeSlot(timeSlot:string,equipments:any){
-      equipments.forEach((item:any)=>{
-          this.equipmentMap.get(timeSlot).set(item.name,item.num)
-      })
+  resetEquipNumInTimeSlot(timeSlot: string, equipments: any) {
+    equipments.forEach((item: any) => {
+      this.equipmentMap.get(timeSlot).set(item.name, item.num);
+    });
   }
 
-  setEquipment(timeSlot:string,equipment:string){
-      const timeSlotEquipment = this.equipmentMap.get(timeSlot)
-      const equipmentList = JSON.parse(equipment)
-      equipmentList.forEach((item:string)=>{
-          if(timeSlotEquipment.has(item)){
-            const numAfter = timeSlotEquipment.get(item) - 1
-            timeSlotEquipment.set(item,numAfter)
-          }
-      })
+  setEquipment(timeSlot: string, equipment: string) {
+    const timeSlotEquipment = this.equipmentMap.get(timeSlot);
+    const equipmentList = JSON.parse(equipment);
+    equipmentList.forEach((item: string) => {
+      if (timeSlotEquipment.has(item)) {
+        const numAfter = timeSlotEquipment.get(item) - 1;
+        timeSlotEquipment.set(item, numAfter);
+      }
+    });
   }
 
   setTimeSlot(room: string, timeSlot: string, detail: any) {
@@ -171,8 +170,8 @@ export class BookingComponent implements OnInit {
     const list = [...timeList, timeSlot];
     const detailWithEquipAray = {
       ...detail,
-      equipment:JSON.parse(detail.equipment)
-    }
+      equipment: JSON.parse(detail.equipment),
+    };
     this.bookingDetailMap.set(room, detailWithEquipAray);
     this.bookingMap.set(room, list);
   }
@@ -197,7 +196,6 @@ export class BookingComponent implements OnInit {
     this.bookingDate = selectedDate;
     this.initBookingMap();
     this.getBooking(this.bookingDate);
-
   }
 
   checkBooking(room: string, timeSlot: string): boolean {
@@ -214,32 +212,50 @@ export class BookingComponent implements OnInit {
     );
     if (booking) {
       const bookingDetail = {
-       ...booking,
-       equipment: JSON.parse(booking.equipment)
-      }
-      this.dialog.open(DetailModalComponent, {
+        ...booking,
+        equipment: JSON.parse(booking.equipment),
+      };
+      const dialogRef = this.dialog.open(DetailModalComponent, {
         data: bookingDetail,
       });
+
+      dialogRef.componentInstance.doConfirm.subscribe((payload) => {
+        if (payload) {
+          this.cancelReservation(payload);
+        }
+      });
+      return dialogRef;
     }
+    return;
   }
+
+  cancelReservation(payload: any) {
+    this.bookingService
+      .deleteReservation(payload)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.initBookingMap()
+        this.getBooking(payload.date);
+      });
+  }
+
   showAddModal(room: string, timeSlot: string) {
     const data = {
       date: this.bookingDate,
       room,
       time: timeSlot,
       ...this.treatments,
-      equipment:this.equipmentMap.get(timeSlot)
+      equipment: this.equipmentMap.get(timeSlot),
     };
     const dialogRef = this.dialog.open(AddBookingModalComponent, {
       data,
     });
 
     dialogRef.componentInstance.doConfirm.subscribe((payload) => {
-      console.log(payload);
       const req = {
         ...payload,
-        equipment:JSON.stringify(payload.equipment)
-      }
+        equipment: JSON.stringify(payload.equipment),
+      };
       this.addReservation(req);
     });
     return dialogRef;
@@ -250,8 +266,6 @@ export class BookingComponent implements OnInit {
       .addReservation(req)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        console.log(res);
-        this.setTimeSlot(req.room, req.timeSlot, req);
         this.getBooking(this.bookingDate);
       });
   }
