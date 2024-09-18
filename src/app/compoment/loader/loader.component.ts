@@ -14,7 +14,6 @@ export class LoaderComponent {
   constructor(private loaderService: LoaderService, private changeDetectorRef: ChangeDetectorRef){}
   ngOnInit(): void {
     this.loaderService.loading$.subscribe((status: boolean) => {
-      console.log(status)
       this.isLoading = status;
       this.trigger();
     });

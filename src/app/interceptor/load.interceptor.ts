@@ -25,7 +25,6 @@ export class LoadingInterceptor implements HttpInterceptor{
     if (isIgnore) {
       return next.handle(request);
     } else {
-      console.log('here ')
       this.loaderService.start();
       return next.handle(request).pipe(
         finalize(() => {
