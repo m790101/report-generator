@@ -24,7 +24,7 @@ import { MatInputModule } from '@angular/material/input';
 import { DetailModalComponent } from './detail-modal/detail-modal.component';
 import moment from 'moment';
 import { AddBookingModalComponent } from './add-booking-modal/add-booking-modal.component';
-import { Subject, takeUntil } from 'rxjs';
+import { concatMap, Subject, takeUntil } from 'rxjs';
 import { Room } from './model/getRoom.model';
 
 /**
@@ -104,8 +104,8 @@ export class BookingComponent implements OnInit {
     this.initBookingMap();
     //api call
     this.getTreatment();
-    this.getEquipment();
-    this.getBooking(this.bookingDate);
+    // this.getEquipment();
+    this.getBookingWithEquipment(this.bookingDate);
     this.scrollToTop();
   }
 
@@ -131,6 +131,27 @@ export class BookingComponent implements OnInit {
     setTimeout(() => {
       window.scroll({ top: 0, left: 0, behavior: 'smooth' });
     }, 300);
+  }
+
+  getBookingWithEquipment(bookingDate: string) {
+      this.bookingService
+      .getEquipment()
+      .pipe(
+        takeUntil(this.destroy$),
+        concatMap((res) => {
+          this.equipments = res.equipmentList;
+          return this.bookingService.getBooking(bookingDate);
+        })
+      )
+      .subscribe((res) => {
+        this.reservations = res;
+        this.initEquipmentMap();
+        res.forEach((item: any) => {
+          this.setTimeSlot(item.room, item.timeSlot, item);
+          this.setEquipment(item.timeSlot, item.equipment);
+        });
+        this.cdr.detectChanges();
+      });
   }
 
   getBooking(bookingDate: string) {
@@ -195,7 +216,7 @@ export class BookingComponent implements OnInit {
     );
     this.bookingDate = selectedDate;
     this.initBookingMap();
-    this.getBooking(this.bookingDate);
+    this.getBookingWithEquipment(this.bookingDate);
   }
 
   checkBooking(room: string, timeSlot: string): boolean {
@@ -234,7 +255,7 @@ export class BookingComponent implements OnInit {
       .deleteReservation(payload)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.initBookingMap()
+        this.initBookingMap();
         this.getBooking(payload.date);
       });
   }
