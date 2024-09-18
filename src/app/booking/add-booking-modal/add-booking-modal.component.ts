@@ -76,7 +76,6 @@ export class AddBookingModalComponent implements OnInit {
       this.addBookingForm.markAllAsTouched();
       console.log('invalid');
     } else {
-      console.log(this.addBookingForm.value);
       const rawData = this.addBookingForm.value;
       const equipment = this.getEquipmentList(rawData);
       const req = {
