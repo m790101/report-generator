@@ -26,11 +26,11 @@ import {
   liverDiseaseExamination,
   sexDiseaseExamination,
   coagulationFunctionExamination,
-  kidneyFunctionExamination
+  kidneyFunctionExamination,
 } from './table.key';
 
-import autoTable from 'jspdf-autotable'
-import '../../../assets/font/NotoSansTC-Regular-normal'
+import autoTable from 'jspdf-autotable';
+import '../../../assets/font/NotoSansTC-Regular-normal';
 import { IconVisibleComponent } from '../icon-visible/icon-visible.component';
 import { IconInvisibleComponent } from '../icon-invisible/icon-invisible.component';
 import { FormsModule } from '@angular/forms';
@@ -38,7 +38,13 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-table',
   standalone: true,
-  imports: [CommonModule, IconDownloadComponent,IconVisibleComponent,IconInvisibleComponent,FormsModule],
+  imports: [
+    CommonModule,
+    IconDownloadComponent,
+    IconVisibleComponent,
+    IconInvisibleComponent,
+    FormsModule,
+  ],
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -55,16 +61,16 @@ export class TableComponent implements OnInit {
   @Output()
   hideEmit = new EventEmitter();
   @Output()
-  showEvent= new EventEmitter();
+  showEvent = new EventEmitter();
 
   note = '';
 
   isHighLight = false;
-  highlightYellow = '#fff299'
-  hiddenGray = '#f2f2f2'
-  hiddenOpacity = '0.4'
+  highlightYellow = '#fff299';
+  hiddenGray = '#f2f2f2';
+  hiddenOpacity = '0.4';
   positiveResult = ['N', 'L'];
-  showIconState:boolean[] = []
+  showIconState: boolean[] = [];
   hideItemSet = new Set();
   isShowEditMap = new Map();
 
@@ -78,9 +84,9 @@ export class TableComponent implements OnInit {
   urineSedimentExamination = urineSedimentExamination as (keyof DataItem)[];
   liverDiseaseExamination = liverDiseaseExamination as (keyof DataItem)[];
   sexDiseaseExamination = sexDiseaseExamination as (keyof DataItem)[];
-  coagulationFunctionExamination = coagulationFunctionExamination as (keyof DataItem)[];
+  coagulationFunctionExamination =
+    coagulationFunctionExamination as (keyof DataItem)[];
   kidneyFunctionExamination = kidneyFunctionExamination as (keyof DataItem)[];
-
 
   criteria = {
     SCC: '<2.7',
@@ -159,7 +165,7 @@ export class TableComponent implements OnInit {
     HIV: '(-)',
     PT: '9.4-12.5 ; MNPT: 11.3',
     APTT: '28.0-40.0 ; MNAPTT: 33.6',
-    INR:'0.85-1.15'
+    INR: '0.85-1.15',
   };
   units = {
     SCC: 'ng/mL',
@@ -235,90 +241,91 @@ export class TableComponent implements OnInit {
     allergen: '',
     PT: 'sec',
     APTT: 'sec',
-    INR:'',
+    INR: '',
     HBsAg: 'S/CO',
     HBsAb: 'mIU/mL',
     HIV: 'S/CO',
   };
 
   constructor() {
-
     effect(() => {
-      this.data().forEach((item:any)=>{
-        this.showIconState.push(true)
-      })
-    })
-
-
+      this.data().forEach((item: any) => {
+        this.showIconState.push(true);
+      });
+    });
   }
   generatePdf(data: any) {
     var doc = new jsPDF();
-    const header = this.data()[0].name + ':'
-    doc.setFont("NotoSansTC-Regular");
-    doc.setFontSize(12)
-    doc.text(header, 15, 10)
+    const header = this.data()[0].name + ':';
+    doc.setFont('NotoSansTC-Regular');
+    doc.setFontSize(12);
+    doc.text(header, 15, 10);
 
-    doc.setTextColor('#58636d')
-    autoTable(doc,{html:'#pdfTable',
-      includeHiddenHtml:true,
-      useCss:true,
+    doc.setTextColor('#58636d');
+    autoTable(doc, {
+      html: '#pdfTable',
+      includeHiddenHtml: true,
+      useCss: true,
       styles: {
-      font: 'NotoSansTC-Regular',
-      fontStyle: 'normal',
-      lineWidth: {
-        bottom: 1,
-        top: 0,
-        left: 0,
-        right: 0,
+        font: 'NotoSansTC-Regular',
+        fontStyle: 'normal',
+        lineWidth: {
+          bottom: 1,
+          top: 0,
+          left: 0,
+          right: 0,
+        },
       },
-    },
-
-  })
+    });
     doc.save('table.pdf');
   }
 
-  openNote(i:number){
-    console.log(i)
-    this.isShowEditMap.set(i,true)
+  openNote(i: number) {
+    this.isShowEditMap.set(i, true);
   }
-  closeNote(i:number){
-    console.log(i)
-
-    this.isShowEditMap.set(i,false)
+  closeNote(i: number) {
+    this.isShowEditMap.set(i, false);
   }
 
-  checkIfShowEdit(i:number){
-    return this.isShowEditMap.get(i)
+  checkIfShowEdit(i: number) {
+    return this.isShowEditMap.get(i);
   }
-
 
   checkCategoryTitle(categoryArray: string[]): boolean {
-    let exist = false
-     categoryArray.forEach((key) => {
-       exist = this.data().some((item: any) => {
-        return item[key]?.value !== ''
-      })
-    })
-    return exist
+    let exist = false;
+    categoryArray.forEach((key) => {
+      exist = this.data().some((item: any) => {
+        return item[key]?.value !== '';
+      });
+    });
+    return exist;
   }
 
-  ngOnInit() {
+  ngOnInit() {}
 
-  }
-
-  swap(index:number){
+  swap(index: number) {
     this.swapEvent.emit(index);
+
+    // also need swap the showIconState
+    this.swapHideState(index)
   }
 
-  hide(item:any) {
+  swapHideState(index:number){
+    if (!this.showIconState[index] || !this.showIconState[index - 1]) {
+      this.showIconState[index] = !this.showIconState[index];
+      this.showIconState[index - 1] = !this.showIconState[index - 1];
+    }
+  }
+
+  hide(item: any) {
     this.hideItemSet.add(item);
-    this.showIconState[this.data().indexOf(item)] = false
+    this.showIconState[this.data().indexOf(item)] = false;
     this.hideEmit.emit(item);
   }
 
-  show(item:any){
+  show(item: any) {
     this.hideItemSet.delete(item);
-    this.showIconState[this.data().indexOf(item)] = true
+    this.showIconState[this.data().indexOf(item)] = true;
     const payLoad = [...this.hideItemSet];
     this.showEvent.emit(payLoad);
   }
@@ -350,11 +357,11 @@ export class TableComponent implements OnInit {
     return moment(date, 'YYYYMMDD').format('YYYY/MM/DD');
   }
 
-  isHighLightRow():boolean {
-    return this.isHighLight
+  isHighLightRow(): boolean {
+    return this.isHighLight;
   }
 
-  alterBloodExamSectionBg():void {
+  alterBloodExamSectionBg(): void {
     this.isHighLight = !this.isHighLight;
   }
 
@@ -430,11 +437,11 @@ export class TableComponent implements OnInit {
     allergen: '224項過敏原/224項過敏?',
     RA: '類風濕性關節炎因子/RA(定量)',
     STSRPR: '梅毒血清反應/STS-RPR',
-    INR:'INR/INR',
-    HBsAg:'Ｂ型肝炎表面抗原/HBsAg',
-    HBsAb:'Ｂ型肝炎表面抗體/HBsAb',
-    HIV:'愛滋病感染篩檢/HIV',
-    PT:'凝血酶原時間/PT',
+    INR: 'INR/INR',
+    HBsAg: 'Ｂ型肝炎表面抗原/HBsAg',
+    HBsAb: 'Ｂ型肝炎表面抗體/HBsAb',
+    HIV: '愛滋病感染篩檢/HIV',
+    PT: '凝血酶原時間/PT',
     APTT: '部份凝血活脢時間/APTT',
   };
 }
@@ -512,5 +519,3 @@ interface DataItem {
   RA?: string;
   STSRPR?: string;
 }
-
-
