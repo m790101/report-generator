@@ -1,3 +1,4 @@
+import { ErrorRes } from "@src/model/error-res"
 
 interface Treatment {
   name:string
@@ -5,7 +6,7 @@ interface Treatment {
 
 
 
-interface GetTreatmentRes {
+interface GetTreatmentRes extends ErrorRes {
   roomList:Treatment[]
 }
 
