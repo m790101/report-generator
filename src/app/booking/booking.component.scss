@@ -4,5 +4,10 @@
 
 
 .booking-block{
-  @apply w-28 h-48  flex   border-2 justify-center mb-1;
+  @apply w-24 h-48  flex border-2 justify-center mb-1;
+}
+
+
+.booking-block-time{
+  @apply w-14 h-48  flex border-2 justify-center mb-1;
 }
