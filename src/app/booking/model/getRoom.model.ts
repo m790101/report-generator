@@ -1,10 +1,12 @@
+import { ErrorRes } from "@src/model/error-res"
+
 interface Room {
   name:string
 }
 
 
 
-interface GetRoomRes {
+interface GetRoomRes extends ErrorRes{
   roomList:Room[]
 }
 

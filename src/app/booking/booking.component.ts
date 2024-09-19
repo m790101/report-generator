@@ -26,6 +26,8 @@ import moment from 'moment';
 import { AddBookingModalComponent } from './add-booking-modal/add-booking-modal.component';
 import { concatMap, Subject, takeUntil } from 'rxjs';
 import { Room } from './model/getRoom.model';
+import { isSuccess } from '@src/utils/api-helper';
+import { ErrorHandlerService } from '@src/services/error-handle.service';
 
 /**
  * @description 設定 TW 日期區間選擇器格式
@@ -79,7 +81,8 @@ export class BookingComponent implements OnInit {
     private fb: FormBuilder,
     public dialog: MatDialog,
     private bookingService: BookingService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private errorHandleService: ErrorHandlerService
   ) {}
 
   initForm() {
@@ -144,12 +147,16 @@ export class BookingComponent implements OnInit {
         })
       )
       .subscribe((res) => {
-        this.reservations = res;
-        this.initEquipmentMap();
-        res.forEach((item: any) => {
-          this.setTimeSlot(item.room, item.timeSlot, item);
-          this.setEquipment(item.timeSlot, item.equipment);
-        });
+        if(isSuccess(res)){
+          this.reservations = res;
+          this.initEquipmentMap();
+          res.forEach((item: any) => {
+            this.setTimeSlot(item.room, item.timeSlot, item);
+            this.setEquipment(item.timeSlot, item.equipment);
+          });
+        } else {
+          this.errorHandleService.errorModalShow(res.errorCode,res.errorMessage)
+        }
         this.cdr.detectChanges();
       });
   }

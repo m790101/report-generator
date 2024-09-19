@@ -10,6 +10,7 @@ import {
 } from '@angular/common/http';
 import { CsvService } from '../services/cvs.service';
 import { LoadingInterceptor } from './interceptor/load.interceptor';
+import { ErrorHandlerService } from '@src/services/error-handle.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,5 +23,6 @@ export const appConfig: ApplicationConfig = {
       multi: true,
     },
     CsvService,
+    ErrorHandlerService
   ],
 };

@@ -1,3 +1,5 @@
+import { ErrorRes } from "@src/model/error-res"
+
 interface Reservation {
   date: string,
   room: string,
@@ -9,7 +11,7 @@ interface Reservation {
 
 
 
-interface BookRoomRes {
+interface BookRoomRes extends ErrorRes{
   reservations:Reservation[]
 }
 

@@ -1,3 +1,5 @@
+import { ErrorRes } from "@src/model/error-res"
+
 interface Equipment {
   name:string
   num:number
@@ -5,7 +7,7 @@ interface Equipment {
 
 
 
-interface GetEquipmentRes {
+interface GetEquipmentRes extends ErrorRes{
   equipmentList:Equipment[]
 }
 
