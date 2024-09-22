@@ -13,7 +13,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatRadioModule } from '@angular/material/radio';
-import { Subject } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-add-booking-modal',
@@ -25,6 +25,7 @@ import { Subject } from 'rxjs';
     MatInputModule,
     MatFormFieldModule,
     MatRadioModule,
+    CommonModule,
   ],
   templateUrl: './add-booking-modal.component.html',
   styleUrl: './add-booking-modal.component.scss',
@@ -34,13 +35,11 @@ export class AddBookingModalComponent implements OnInit {
   title = '預約療程'; // 通知
   bookingData: any = {};
   addBookingForm!: FormGroup;
-  private destroy$ = new Subject();
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: AddBookingModalComponent,
     public dialogRef: MatDialogRef<AddBookingModalComponent>,
-    private fb: FormBuilder,
-    private bookingService: BookingService
+    private fb: FormBuilder
   ) {
     if (data) {
       this.bookingData = data;
@@ -74,7 +73,6 @@ export class AddBookingModalComponent implements OnInit {
   submit() {
     if (this.addBookingForm.invalid) {
       this.addBookingForm.markAllAsTouched();
-      console.log('invalid');
     } else {
       const rawData = this.addBookingForm.value;
       const equipment = this.getEquipmentList(rawData);
@@ -84,7 +82,7 @@ export class AddBookingModalComponent implements OnInit {
         room: rawData.room,
         timeSlot: rawData.timeSlot,
         treatment: rawData.treatment,
-        equipment
+        equipment,
       };
 
       this.doConfirm.emit(req);

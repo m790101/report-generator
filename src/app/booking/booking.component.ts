@@ -137,7 +137,7 @@ export class BookingComponent implements OnInit {
   }
 
   getBookingWithEquipment(bookingDate: string) {
-      this.bookingService
+    this.bookingService
       .getEquipment()
       .pipe(
         takeUntil(this.destroy$),
@@ -147,7 +147,7 @@ export class BookingComponent implements OnInit {
         })
       )
       .subscribe((res) => {
-        if(isSuccess(res)){
+        if (isSuccess(res)) {
           this.reservations = res;
           this.initEquipmentMap();
           res.forEach((item: any) => {
@@ -155,12 +155,30 @@ export class BookingComponent implements OnInit {
             this.setEquipment(item.timeSlot, item.equipment);
           });
         } else {
-          this.errorHandleService.errorModalShow(res.errorCode,res.errorMessage)
+          this.errorHandleService.errorModalShow(
+            res.errorCode,
+            res.errorMessage
+          );
         }
         this.cdr.detectChanges();
       });
   }
 
+  editReservation(req: any) {
+    this.bookingService
+      .editReservation(req)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (isSuccess(res)) {
+          this.getBooking(this.bookingDate);
+        } else {
+          this.errorHandleService.errorModalShow(
+            res.errorCode,
+            res.errorMessage
+          );
+        }
+      });
+  }
   getBooking(bookingDate: string) {
     this.bookingService
       .getBooking(bookingDate)
@@ -242,14 +260,25 @@ export class BookingComponent implements OnInit {
       const bookingDetail = {
         ...booking,
         equipment: JSON.parse(booking.equipment),
+        treatments: this.treatments.treatmentList,
+        equipmentMap: this.equipmentMap.get(timeSlot),
       };
       const dialogRef = this.dialog.open(DetailModalComponent, {
         data: bookingDetail,
       });
 
-      dialogRef.componentInstance.doConfirm.subscribe((payload) => {
+      dialogRef.componentInstance.doCancel.subscribe((payload) => {
         if (payload) {
           this.cancelReservation(payload);
+        }
+      });
+      dialogRef.componentInstance.doEdit.subscribe((payload) => {
+        if (payload) {
+          payload = {
+            ...payload,
+            equipment: JSON.stringify(payload.equipment),
+          };
+          this.editReservation(payload);
         }
       });
       return dialogRef;
@@ -272,7 +301,7 @@ export class BookingComponent implements OnInit {
       date: this.bookingDate,
       room,
       time: timeSlot,
-      ...this.treatments,
+      treatments: this.treatments.treatmentList,
       equipment: this.equipmentMap.get(timeSlot),
     };
     const dialogRef = this.dialog.open(AddBookingModalComponent, {
