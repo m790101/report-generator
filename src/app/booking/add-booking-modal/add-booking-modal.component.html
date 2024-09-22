@@ -23,35 +23,61 @@
         >
       </div>
       <div class="mt-3">
-        <label
-          for="name"
-          class="block mb-2 text-sm text-gray-900 dark:text-white"
-          >客人姓名:</label
+        <div>
+          <label
+            for="name"
+            class="block mb-2 text-sm text-gray-900 dark:text-white"
+            >客人姓名:</label
+          >
+          <input
+            type="text"
+            formControlName="name"
+            id="name"
+            class="input-name"
+            placeholder="請輸入姓名"
+          />
+        </div>
+        <div
+          *ngIf="
+            addBookingForm.get('name')?.invalid &&
+            addBookingForm.get('name')?.touched &&
+            addBookingForm.get('name')?.hasError('required')
+          "
+          class="mt-1 absolute"
         >
-        <input
-          type="text"
-          formControlName="name"
-          id="name"
-          class="input-name"
-          placeholder="請輸入姓名"
-        />
+          <span class="error-msg text-red-500 text-s">請輸入姓名</span>
+        </div>
       </div>
-      <div class="mt-4">
-        <mat-label>選擇療程</mat-label>
+      <div class="mt-7">
+        <label class="block mb-2 text-sm text-gray-900 dark:text-white"
+          >選擇療程:</label
+        >
         <mat-select
           [placeholder]="'請選擇療程'"
           formControlName="treatment"
           class="input-select text-s"
         >
-          @for (treatment of bookingData.treatmentList; track $index) {
+          @for (treatment of bookingData.treatments; track $index) {
           <mat-option [value]="treatment.value">{{
-            treatment.name
+            treatment.name.toUpperCase()
           }}</mat-option>
           }
         </mat-select>
+        <div>
+          <div
+            *ngIf="
+              addBookingForm.get('treatment')?.invalid &&
+              addBookingForm.get('treatment')?.touched &&
+              addBookingForm.get('treatment')?.hasError('required')
+            "
+            class="mt-1 absolute"
+          >
+            <span class="error-msg text-red-500 text-s">請輸入療程</span>
+          </div>
+        </div>
       </div>
       <div>
-        <div class="mt-4">
+        <div class="mt-7">
           <div>
             <mat-label>選擇器材</mat-label>
           </div>
@@ -66,11 +92,11 @@
             <label
               for="equipment"
               class="ms-2 text-sm text-gray-900 dark:text-gray-300"
-              >{{ equipment.name }}</label
+              >{{ equipment.name.toUpperCase() }}</label
             >
             <div class="ml-3">
               <span>
-                剩餘：{{bookingData.equipment.get(equipment.key)}}
+                剩餘：{{ bookingData.equipment.get(equipment.key) }}
               </span>
             </div>
           </div>

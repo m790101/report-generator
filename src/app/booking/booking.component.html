@@ -64,7 +64,7 @@
             >
               <div class="" *ngIf="checkBooking(room,timeSlot)">
                   <div class="font-medium text-lg" >
-                    {{ bookingDetailMap.get(room).treatment}}
+                    {{ bookingDetailMap.get(room).treatment.toUpperCase()}}
                   </div>
                   <div class="text-base">
                     {{ bookingDetailMap.get(room).name}}
@@ -74,7 +74,7 @@
                     <ul>
                       @for (equipment of bookingDetailMap.get(room).equipment; track $index) {
                         <li>
-                          {{ equipment}}
+                          {{ equipment.toUpperCase()}}
                         </li>
                       }
                     </ul>
