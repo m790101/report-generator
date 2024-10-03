@@ -109,7 +109,6 @@ export class DetailModalComponent implements OnInit {
   }
   submitEditBooking() {
     if(this.editBookingForm.invalid){
-      console.log('invalid')
       this.editBookingForm.markAllAsTouched()
     } else {
       const rawData = this.editBookingForm.value
