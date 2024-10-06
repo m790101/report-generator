@@ -1,0 +1,10 @@
+.circle{
+  width:10px;
+  height: 10px;
+}
+
+.group-circle:nth-child(3n) {
+  @apply mr-2; /* No margin after the 3rd item */
+}
+
+
