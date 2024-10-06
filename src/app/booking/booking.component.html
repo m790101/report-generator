@@ -1,42 +1,37 @@
-<main class="flex justify-center ">
-  <div class=" p-6">
+<main class="flex justify-center">
+  <div class="p-6">
     <div class="mt-5 text-xl text-center">
       <p>來喔訂病房囉</p>
     </div>
-    <div class="mt-5 text-xl">
-      <p>表單日期：{{bookingDate}} </p>
+    <div class="mb-5 text-4xl flex gap-2">
+      <span>{{ getYearMonth() }} </span>
+      <div (click)="toggleCalendar()">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="size-9"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="m19.5 8.25-7.5 7.5-7.5-7.5"
+          />
+        </svg>
+      </div>
     </div>
-    <section class="mt-5">
-      <form [formGroup]="bookingForm" class="form">
-        <div class="flex items-center">
-          <label class="">查詢日期：</label>
-          <div class="relative">
-            <input matInput
-            [placeholder]="'請輸入日期'"
-            [matDatepicker]="datepicker"
-            (click)="datepicker.open()"
-            formControlName="date"
-            autocomplete="off"
-            class="date-picker-input"
-            >
-            <mat-datepicker #datepicker startView="month" [startAt]="startDate"></mat-datepicker>
-            <div
-                *ngIf="
-                  bookingForm.get('date')?.invalid &&
-                  bookingForm.get('date')?.touched &&
-                  bookingForm.get('date')?.hasError('required')
-                "
-                class="ml-3  absolute"
-              >
-                <span class="error-msg text-red-500 text-s">請選擇日期</span>
-              </div>
-            </div>
-          <button class="ml-10 btn" (click)="search()" >search</button>
-        </div>
-      </form>
+    <app-monthly-form
+      [hidden]="showCalendar"
+      (goNextMonth)="goNextMonth()"
+      (goPreviousMonth)="goPreviousMonth()"
+      (changeDateEvent)="changeDate($event)"
+      [monthlyReservationList]="monthlyReservationList"
+      [targetDate]="targetDate"
+    ></app-monthly-form>
 
-    </section>
-    <section class="flex gap-3 mt-10">
+    <section class="flex gap-3 mt-10 justify-center w-100" *ngIf="targetDate()">
       <div>
         <div class="p-6"></div>
         <div>
@@ -51,37 +46,41 @@
           </ul>
         </div>
       </div>
-      <div  *ngFor="let room of rooms;$index">
+      <div *ngFor="let room of rooms; $index">
         <div class="px-6 py-1 text-center text-lg">
           <p>{{ room }}</p>
         </div>
         <div>
           <ul>
             <li
-            *ngFor="let timeSlot of timeSlots;$index"
-            class="booking-block pt-2 text-s  cursor-pointer" (click)="checkToShowModal(room,timeSlot)"
-            [ngClass]="{ 'hover:bg-sky-300': !checkBooking(room,timeSlot),'bg-green-300': checkBooking(room,timeSlot) }"
+              *ngFor="let timeSlot of timeSlots; $index"
+              class="booking-block pt-2 text-s cursor-pointer"
+              (click)="checkToShowModal(room, timeSlot)"
+              [ngClass]="{
+                'hover:bg-sky-300': !checkBooking(room, timeSlot),
+                'bg-green-300': checkBooking(room, timeSlot)
+              }"
             >
-              <div class="" *ngIf="checkBooking(room,timeSlot)">
-                  <div class="font-medium text-lg" >
-                    {{ bookingDetailMap.get(room).treatment.toUpperCase()}}
-                  </div>
-                  <div class="text-base">
-                    {{ bookingDetailMap.get(room).name}}
-                  </div>
-                  <hr class="h-0.5 mb-2 border-t-0  bg-black" />
-                  <div>
-                    <ul>
-                      @for (equipment of bookingDetailMap.get(room).equipment; track $index) {
-                        <li>
-                          {{ equipment.toUpperCase()}}
-                        </li>
-                      }
-                    </ul>
-                  </div>
+              <div class="" *ngIf="checkBooking(room, timeSlot)">
+                <div class="font-medium text-lg">
+                  {{ bookingDetailMap.get(room).treatment.toUpperCase() }}
+                </div>
+                <div class="text-base">
+                  {{ bookingDetailMap.get(room).name }}
+                </div>
+                <hr class="h-0.5 mb-2 border-t-0 bg-black" />
+                <div>
+                  <ul>
+                    @for (equipment of bookingDetailMap.get(room).equipment;
+                    track $index) {
+                    <li>
+                      {{ equipment.toUpperCase() }}
+                    </li>
+                    }
+                  </ul>
+                </div>
               </div>
-               <div class="" *ngIf="!checkBooking(room,timeSlot)">
-                  </div>
+              <div class="" *ngIf="!checkBooking(room, timeSlot)"></div>
             </li>
           </ul>
         </div>

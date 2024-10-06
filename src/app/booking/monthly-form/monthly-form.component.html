@@ -1,0 +1,79 @@
+<main>
+  <div class="mb-5 text-xl">
+  </div>
+  <section class="justify-between flex gap-3 mb-3">
+    <div (click)="previousMonth()" class="cursor-pointer">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="size-9"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M15.75 19.5 8.25 12l7.5-7.5"
+        />
+      </svg>
+    </div>
+    <div (click)="nextMonth()" class="cursor-pointer">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="size-9"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="m8.25 4.5 7.5 7.5-7.5 7.5"
+        />
+      </svg>
+    </div>
+  </section>
+  <div class="border border-gray-200">
+    <div class="border border-gray-200">
+      <div class="grid grid-cols-7 divide-gray-200 border-b border-gray-200">
+        <div
+          class="p-3.5"
+          *ngFor="let day of ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']"
+        >
+          <span class="text-sm font-heavy text-gray-500">{{ day }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="grid grid-cols-7 divide-gray-200 border-b border-gray-200">
+      <div
+        class="p-3.5 hover:bg-sky-100 cursor-pointer"
+        *ngFor="let i of [].constructor(42); let day = index"
+        (click)="changeDate(getDate(day))"
+      >
+        <div
+          class="flex items-center justify-center text-base w-8 h-8  rounded-full"
+          [style.backgroundColor]="checkTargetDate(getDate(day)) ? '#aec1fe' : ''"
+        >
+          <span class="font-bold"
+          >{{ getDate(day) }}</span>
+        </div>
+        <div class="flex gap-0.5" *ngIf="isWeekday(day)">
+          <ul
+            class="group-circle"
+            *ngFor="let num of [].constructor(9); let room = index"
+          >
+            <li
+              *ngFor="let i of [].constructor(6); let timeSlot = index"
+              [style.backgroundColor]="
+                getReservationForDate(day, room, timeSlot) ? checkReservationRoomColor(room) : ''
+              "
+              class="rounded-full my-1 border circle mx-0.5"
+            ></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

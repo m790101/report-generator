@@ -28,6 +28,9 @@ export class BookingService extends BaseService {
   getEquipment(): Observable<GetEquipmentRes> {
     return this.get({}, 'api/v1/equipment');
   }
+  getReservationMonthly(req: object | any []): Observable<any> {
+    return this.post(req, `api/v1/reservation/month`);
+  }
 
   addReservation(req: object | any[] | undefined): Observable<Reservation> {
     return this.post(req, 'api/v1/reservation');

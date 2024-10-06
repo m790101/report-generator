@@ -9,8 +9,10 @@ import {
   withInterceptorsFromDi,
 } from '@angular/common/http';
 import { CsvService } from '../services/cvs.service';
-import { LoadingInterceptor } from './interceptor/load.interceptor';
+import { LoadingInterceptor } from '../interceptor/load.interceptor';
 import { ErrorHandlerService } from '@src/services/error-handle.service';
+import { HeaderInterceptor } from '@src/interceptor/header.interceptor';
+import { ResponseHandlerInterceptor } from '@src/interceptor/response.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -20,6 +22,16 @@ export const appConfig: ApplicationConfig = {
     {
       provide: HTTP_INTERCEPTORS,
       useClass: LoadingInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HeaderInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ResponseHandlerInterceptor,
       multi: true,
     },
     CsvService,

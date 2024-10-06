@@ -1,10 +1,10 @@
 import { BookingService } from './booking.service';
 import { CommonModule } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   OnInit,
+  signal,
 } from '@angular/core';
 import {
   FormBuilder,
@@ -28,6 +28,7 @@ import { concatMap, Subject, takeUntil } from 'rxjs';
 import { Room } from './model/getRoom.model';
 import { isSuccess } from '@src/utils/api-helper';
 import { ErrorHandlerService } from '@src/services/error-handle.service';
+import { MonthlyFormComponent } from './monthly-form/monthly-form.component';
 
 /**
  * @description 設定 TW 日期區間選擇器格式
@@ -53,8 +54,8 @@ export const TW_FORMATS = {
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
+    MonthlyFormComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './booking.component.html',
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'zh-TW' },
@@ -64,12 +65,14 @@ export const TW_FORMATS = {
 })
 export class BookingComponent implements OnInit {
   bookingForm!: FormGroup;
-  readonly startDate = new Date();
+  monthlyReservationList = signal([]);
   today = moment().format('YYYY-MM-DD');
   bookingDate = moment().format('YYYY-MM-DD');
   rooms = ['201', '202', '203', '205', '206', '207', '208', '209', '999'];
   timeSlots = ['09:30', '11:00', '12:00', '13:30', '15:00', '16:30'];
   equipments: any = [];
+  targetDate = signal(this.today);
+  showCalendar = true
 
   equipmentMap = new Map();
   reservations: any = [];
@@ -85,6 +88,9 @@ export class BookingComponent implements OnInit {
     private errorHandleService: ErrorHandlerService
   ) {}
 
+  toggleCalendar(){
+    this.showCalendar = ! this.showCalendar
+  }
   initForm() {
     this.bookingForm = this.fb.group({
       date: new FormControl('', [Validators.required]),
@@ -107,9 +113,48 @@ export class BookingComponent implements OnInit {
     this.initBookingMap();
     //api call
     this.getTreatment();
-    // this.getEquipment();
     this.getBookingWithEquipment(this.bookingDate);
     this.scrollToTop();
+  }
+
+  getYearMonth(){
+    return moment(this.bookingDate).format('YYYY-MM')
+  }
+  goNextMonth() {
+    this.targetDate.set('')
+    this.bookingDate = moment(this.bookingDate, 'YYYY-MM-DD')
+      .add(1, 'month')
+      .format('YYYY-MM-DD');
+    this.getBooking(this.bookingDate);
+  }
+  goPreviousMonth() {
+    this.targetDate.set('')
+    this.bookingDate = moment(this.bookingDate, 'YYYY-MM-DD')
+      .add(-1, 'month')
+      .format('YYYY-MM-DD');
+    this.getBooking(this.bookingDate);
+  }
+  changeDate(date: any) {
+    this.bookingDate = date;
+    this.targetDate.set(date);
+    this.initBookingMap();
+    this.initEquipmentMap();
+    const reservationDay = this.monthlyReservationList().filter((item: any) => {
+      return item.date === this.bookingDate;
+    });
+    reservationDay.forEach((item: any) => {
+      this.setTimeSlot(item.room, item.timeSlot, item);
+      this.setEquipment(item.timeSlot, item.equipment);
+    });
+  }
+
+  getMonthlyReservation(req: any): void {
+    this.bookingService
+      .getReservationMonthly(req)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.monthlyReservationList.set(res.reservationList);
+      });
   }
 
   getEquipment() {
@@ -143,14 +188,19 @@ export class BookingComponent implements OnInit {
         takeUntil(this.destroy$),
         concatMap((res) => {
           this.equipments = res.equipmentList;
-          return this.bookingService.getBooking(bookingDate);
+          return this.bookingService.getReservationMonthly({
+            date: moment(this.today).format('YYYY-MM'),
+          });
         })
       )
       .subscribe((res) => {
         if (isSuccess(res)) {
-          this.reservations = res;
+          this.monthlyReservationList.set(res.reservationList);
           this.initEquipmentMap();
-          res.forEach((item: any) => {
+          const reservationDay = res.reservationList.filter((item: any) => {
+            return item.date === bookingDate;
+          });
+          reservationDay.forEach((item: any) => {
             this.setTimeSlot(item.room, item.timeSlot, item);
             this.setEquipment(item.timeSlot, item.equipment);
           });
@@ -160,7 +210,6 @@ export class BookingComponent implements OnInit {
             res.errorMessage
           );
         }
-        this.cdr.detectChanges();
       });
   }
 
@@ -180,17 +229,22 @@ export class BookingComponent implements OnInit {
       });
   }
   getBooking(bookingDate: string) {
+    const req = {
+      date: moment(bookingDate).format('YYYY-MM'),
+    };
     this.bookingService
-      .getBooking(bookingDate)
+      .getReservationMonthly(req)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.reservations = res;
+        this.monthlyReservationList.set(res.reservationList);
         this.initEquipmentMap();
-        res.forEach((item: any) => {
+        const reservationDay = res.reservationList.filter((item: any) => {
+          return item.date === bookingDate;
+        });
+        reservationDay.forEach((item: any) => {
           this.setTimeSlot(item.room, item.timeSlot, item);
           this.setEquipment(item.timeSlot, item.equipment);
         });
-        this.cdr.detectChanges();
       });
   }
 
@@ -253,8 +307,8 @@ export class BookingComponent implements OnInit {
   }
 
   showDetail(room: string, timeSlot: string) {
-    const booking = this.reservations.find(
-      (item: any) => item.room === room && item.timeSlot === timeSlot
+    const booking:any = this.monthlyReservationList().find(
+      (item: any) => item.date === this.targetDate() && item.room === room && item.timeSlot === timeSlot
     );
     if (booking) {
       const bookingDetail = {
