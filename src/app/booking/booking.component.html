@@ -23,7 +23,7 @@
       </div>
     </div>
     <app-monthly-form
-      [hidden]="showCalendar"
+      [hidden]="!showCalendar"
       (goNextMonth)="goNextMonth()"
       (goPreviousMonth)="goPreviousMonth()"
       (changeDateEvent)="changeDate($event)"
