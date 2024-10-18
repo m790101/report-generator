@@ -1,6 +1,100 @@
+<app-modal
+  [title]="title"
+  [outsideClose]="true"
+  (cancelEvent)="ok()"
+  class="muti-modal"
+>
+  <section class="mt-3">
+    <form [formGroup]="mutiReservationForm">
+      <!-- <div>
+        <input type="text">
+      </div> -->
+      <div>
+        <div>
+          <span class="text-base">選擇時段:</span>
+        </div>
+        <mat-select
+          [placeholder]="'請選擇時段'"
+          formControlName="timeSlot"
+          class="input-select text-sm"
+          (selectionChange)="getReservationByTime()"
 
-
-<app-modal [title]="'123'" [outsideClose]="true" (cancelEvent)="ok()">
-  <p>muti-booking-modal works!</p>
+        >
+          @for(timeSlot of timeSlots; track $index) {
+          <mat-option [value]="timeSlot"> {{ timeSlot }} </mat-option>
+          }
+        </mat-select>
+      </div>
+      <div class="mt-3">
+        <div>
+          <span>選擇房間:</span>
+        </div>
+        <mat-select
+          [placeholder]="'請選擇房間'"
+          formControlName="room"
+          class="input-select text-xs"
+          (selectionChange)="updateRoomSelected()"
+        >
+        @for(room of bookingData.rooms; track $index) {
+          <mat-option [value]="room"> {{ room }} </mat-option>
+          }
+        </mat-select>
+      </div>
+      <div class="mt-3">
+        <div>
+          <span class="text-base">選擇日期:</span>
+        </div>
+        <app-monthly-form-muti
+          (goNextMonth)="goNextMonth()"
+          (goPreviousMonth)="goPreviousMonth()"
+          (changeDateEvent)="changeDate($event)"
+          [reservationList]="reservationList"
+          [roomSelected]="roomSelected"
+          [targetDate]="targetDate"
+        ></app-monthly-form-muti>
+      </div>
+      <div class="mt-3">
+        <div>
+          <span>選擇療程:</span>
+        </div>
+        <mat-select
+          [placeholder]="'請選擇療程'"
+          formControlName="treatment"
+          class="input-select text-xs"
+        >
+          <mat-option [value]="'1'"> EECP </mat-option>
+        </mat-select>
+      </div>
+      <div>
+        <div class="mt-7">
+          <div>
+            <mat-label>選擇器材</mat-label>
+          </div>
+          @for (equipment of equipmentList; track $index) {
+          <div class="flex items-center">
+            <input
+              [id]="$index"
+              [formControlName]="equipment.key"
+              type="checkbox"
+              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            />
+            <label
+              for="equipment"
+              class="ms-2 text-sm text-gray-900 dark:text-gray-300"
+              >{{ equipment.name.toUpperCase() }}</label
+            >
+            <!-- <div class="ml-3">
+              <span>
+                剩餘：{{ bookingData.equipment.get(equipment.key) }}
+              </span>
+            </div> -->
+          </div>
+          }
+        </div>
+      </div>
+      <div class="mt-3 flex justify-center">
+        <button class="btn">submit</button>
+      </div>
+    </form>
+  </section>
 </app-modal>
-

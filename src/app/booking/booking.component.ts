@@ -29,6 +29,7 @@ import { Room } from './model/getRoom.model';
 import { isSuccess } from '@src/utils/api-helper';
 import { ErrorHandlerService } from '@src/services/error-handle.service';
 import { MonthlyFormComponent } from './monthly-form/monthly-form.component';
+import { MutiBookingModalComponent } from './muti-booking-modal/muti-booking-modal.component';
 
 /**
  * @description 設定 TW 日期區間選擇器格式
@@ -300,6 +301,13 @@ export class BookingComponent implements OnInit {
 
   checkBooking(room: string, timeSlot: string): boolean {
     return this.bookingMap.get(room).includes(timeSlot);
+  }
+  showMutiModal(){
+    const data = {
+      rooms: this.rooms,
+    };
+    this.dialog.open(MutiBookingModalComponent,{data})
+
   }
 
   showModal() {
