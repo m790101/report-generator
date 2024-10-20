@@ -40,10 +40,14 @@ export class BookingService extends BaseService {
   addReservation(req: object | any[] | undefined): Observable<Reservation> {
     return this.post(req, 'api/v1/reservation');
   }
+  addMutiReservation(req: object | any[] | undefined):Observable<object>{
+    return this.post(req, 'api/v1/reservation/muti/add')
+  }
   deleteReservation(req: object | any[] | undefined): Observable<string> {
     return this.post(req, 'api/v1/reservation/delete');
   }
   editReservation(req: object | any[] | undefined): Observable<Reservation> {
     return this.post(req, 'api/v1/edit');
   }
+
 }

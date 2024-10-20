@@ -1,11 +1,6 @@
 import { BookingService } from './booking.service';
 import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectorRef,
-  Component,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, signal } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -73,7 +68,7 @@ export class BookingComponent implements OnInit {
   timeSlots = ['09:30', '11:00', '12:00', '13:30', '15:00', '16:30'];
   equipments: any = [];
   targetDate = signal(this.today);
-  showCalendar = true
+  showCalendar = true;
 
   equipmentMap = new Map();
   reservations: any = [];
@@ -89,8 +84,8 @@ export class BookingComponent implements OnInit {
     private errorHandleService: ErrorHandlerService
   ) {}
 
-  toggleCalendar(){
-    this.showCalendar = ! this.showCalendar
+  toggleCalendar() {
+    this.showCalendar = !this.showCalendar;
   }
   initForm() {
     this.bookingForm = this.fb.group({
@@ -118,18 +113,18 @@ export class BookingComponent implements OnInit {
     this.scrollToTop();
   }
 
-  getYearMonth(){
-    return moment(this.bookingDate).format('YYYY-MM')
+  getYearMonth() {
+    return moment(this.bookingDate).format('YYYY-MM');
   }
   goNextMonth() {
-    this.targetDate.set('')
+    this.targetDate.set('');
     this.bookingDate = moment(this.bookingDate, 'YYYY-MM-DD')
       .add(1, 'month')
       .format('YYYY-MM-DD');
     this.getBooking(this.bookingDate);
   }
   goPreviousMonth() {
-    this.targetDate.set('')
+    this.targetDate.set('');
     this.bookingDate = moment(this.bookingDate, 'YYYY-MM-DD')
       .add(-1, 'month')
       .format('YYYY-MM-DD');
@@ -302,12 +297,20 @@ export class BookingComponent implements OnInit {
   checkBooking(room: string, timeSlot: string): boolean {
     return this.bookingMap.get(room).includes(timeSlot);
   }
-  showMutiModal(){
+  showMutiModal() {
     const data = {
       rooms: this.rooms,
     };
-    this.dialog.open(MutiBookingModalComponent,{data})
-
+    const dialogRef = this.dialog.open(MutiBookingModalComponent, { data });
+    dialogRef.componentInstance.doConfirm.subscribe((payload) => {
+      const req = {
+        ...payload,
+        equipment: JSON.stringify(payload.equipment),
+      };
+      this.addMutiReservation(req);
+      console.log(req);
+    });
+    return dialogRef;
   }
 
   showModal() {
@@ -315,8 +318,11 @@ export class BookingComponent implements OnInit {
   }
 
   showDetail(room: string, timeSlot: string) {
-    const booking:any = this.monthlyReservationList().find(
-      (item: any) => item.date === this.targetDate() && item.room === room && item.timeSlot === timeSlot
+    const booking: any = this.monthlyReservationList().find(
+      (item: any) =>
+        item.date === this.targetDate() &&
+        item.room === room &&
+        item.timeSlot === timeSlot
     );
     if (booking) {
       const bookingDetail = {
@@ -379,7 +385,16 @@ export class BookingComponent implements OnInit {
     });
     return dialogRef;
   }
+  addMutiReservation(req: any) {
+    this.bookingService
+      .addMutiReservation(req)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        console.log(res);
+        this.getBooking(this.bookingDate);
 
+      });
+  }
   addReservation(req: any) {
     this.bookingService
       .addReservation(req)

@@ -18,7 +18,7 @@ import { Subject } from 'rxjs';
   styleUrls: ['./monthly-form-muti.component.scss'],
 })
 export class MonthlyFormMutiComponent implements OnInit {
-  @Output() changeDateEvent = new EventEmitter();
+  @Output() selectDateEvent = new EventEmitter();
   @Output() goNextMonth = new EventEmitter();
   @Output() goPreviousMonth = new EventEmitter();
   @Input() reservationList!: Signal<any>;
@@ -88,12 +88,11 @@ export class MonthlyFormMutiComponent implements OnInit {
       this.selectDateList = this.selectDateList.filter(
         (item) => item !== fullDate
       );
+      this.selectDateEvent.emit(this.selectDateList);
       return;
     }
     this.selectDateList.push(fullDate);
-    // const targetDate =
-    //   this.timeYearMonth.format('YYYY-MM') + '-' + date.padStart(2, '0');
-    // this.changeDateEvent.emit(targetDate);
+    this.selectDateEvent.emit(this.selectDateList);
   }
   getFullDate(date: string) {
     return this.timeYearMonth.format('YYYY-MM') + '-' + date.padStart(2, '0');
