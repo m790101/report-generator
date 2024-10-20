@@ -21,6 +21,7 @@ export class BookingService extends BaseService {
   getBooking(date: string): Observable<any> {
     return this.get({}, `api/v1/reservation/${date}`);
   }
+
   getTreatment(): Observable<GetTreatmentRes> {
     return this.get({}, 'api/v1/treatment');
   }
@@ -32,8 +33,15 @@ export class BookingService extends BaseService {
     return this.post(req, `api/v1/reservation/month`);
   }
 
+  getReservationMuti(timeSlot:string){
+    return this.post({timeSlot}, 'api/v1/reservation/muti');
+  }
+
   addReservation(req: object | any[] | undefined): Observable<Reservation> {
     return this.post(req, 'api/v1/reservation');
+  }
+  addMutiReservation(req: object | any[] | undefined):Observable<object>{
+    return this.post(req, 'api/v1/reservation/muti/add')
   }
   deleteReservation(req: object | any[] | undefined): Observable<string> {
     return this.post(req, 'api/v1/reservation/delete');
@@ -41,4 +49,5 @@ export class BookingService extends BaseService {
   editReservation(req: object | any[] | undefined): Observable<Reservation> {
     return this.post(req, 'api/v1/edit');
   }
+
 }

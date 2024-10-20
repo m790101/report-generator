@@ -85,6 +85,7 @@ export class AddBookingModalComponent implements OnInit {
         equipment,
       };
 
+      console.log(req)
       this.doConfirm.emit(req);
       this.ok();
     }
